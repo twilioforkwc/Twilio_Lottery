@@ -1,4 +1,11 @@
 <% extend 'layout' %>
 <h1><%= @title %></h1>
 <p><%= @title %>へようこそ</p>
+<form method="POST" action="/number">
+  <input type="hidden" name="_csrf" value="<%= @csrf %>" />  
+  <select name="phone_number">
+    <%- @options %>
+  </select>
+  <input type="submit" value="送信" />
+</form>
 
