@@ -6,6 +6,14 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "*"
+    "express": "*",
+    "ect": "*",
+    "mongoose": "*",
+    "connect-mongo": "*",
+    "twilio": "*",
+    "morgan": "*",
+    "body-parser": "*",
+    "express-session": "*",
+    "cookie-parser": "*"
   }
 }
