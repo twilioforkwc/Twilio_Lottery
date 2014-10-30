@@ -29,6 +29,9 @@ app.engine('ect', ECT({ watch: true, root: __dirname + '/views', ext: '.ect' }).
 app.set('view engine', 'ect');
 app.use(express['static'](__dirname + '/public'));
 
+// Model
+var Lottery = require('models/lottery');
+
 // Logs
 if (app.get('env') == 'production') {
   app.use(morgan("dev", {}));
@@ -94,7 +97,6 @@ app.post('/number', function(req, res){
   var sid = req.session.sid;
   var auth_token = req.session.auth_token;
   var number = req.param('phone_number');
-  var Lottery = require('models/lottery');
   var generated_token;
   function random(){
     return Math.random().toString(36).substr(2);
@@ -129,7 +131,6 @@ app.post('/number', function(req, res){
 
 //電話番号別抽選ページ
 app.get('/l/:token', function(req, res){
-  var Lottery = require('models/lottery');
   var lottery = new Lottery();
   Lottery.find({token: req.params.token}, function(err, docs){
     for(var i = 0, len = docs.length; i < len; i++){
@@ -146,16 +147,27 @@ app.get('/l/:token', function(req, res){
 });
 
 //Twilioからのリクエストかチェック
-function validateToken(req, auth_token){
-  if (twilio.validateExpressRequest(req, auth_token)){
-    return true;
-  }else{
-    return false;
-  }
+function validateToken(sid, token, callback){
+  Lottery.find({token: token, accound_sid: sid}, function(err, docs){
+    if(err || docs.length <= 0){
+      error();
+    }else{
+      var doc = dos[0];
+      if (twilio.validateExpressRequest(sid, doc.auth_token)){
+        callback();
+      }else{
+        error();
+      }
+    }
+  });
 }
 //着電するとTwilioから呼び出される
 app.post('/twiml/:token', function(req, res){
+  validateToken(req.param('AccountSid'), req.params.token, function(e){
 
+  }, function(e){
+
+  });
 });
 //通話がエラーになった
 app.post('/fallback/:token', function(req, res){
