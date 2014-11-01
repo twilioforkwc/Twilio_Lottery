@@ -28,7 +28,14 @@ app.use(session({
 }));
 
 // CSRF
-app.use(csrf());
+var csrfExc = ['/twilio', '/fallback', '/status']; //API calls
+app.use(function(req, res, next){
+  if(csrfExc.indexOf(req.path) !== -1){
+    next();
+  }else{
+    csrf(req, res, next);
+  }
+});
 
 // Views
 app.engine('ect', ECT({ watch: true, root: __dirname + '/views', ext: '.ect' }).render);
