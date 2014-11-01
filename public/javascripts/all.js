@@ -27,8 +27,7 @@ $(document).ready(function(){
     return false;
   });
 
-  if($('#candidates')){
-alert($('#candidates'));
+  if($('#candidates').length > 0){
     setInterval(function(e){
       $.ajax({
         url: '/candidates?id=' + $('#token').html(),

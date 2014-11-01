@@ -33,7 +33,7 @@ app.use(function(req, res, next){
   if(csrfExc.indexOf(req.path) !== -1){
     next();
   }else{
-    csrf(req, res, next);
+    csrf()(req, res, next);
   }
 });
 
