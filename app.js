@@ -342,6 +342,21 @@ function phoneCall(args){
 // 終了
 app.post('/destroy/:token', function(req, res){
   // 抽選データ削除
+  Lottery.find({token: req.param('token')}, function(err, docs){
+    if(!err){
+      for(var i = 0, len = docs.length; i < len; i++){
+        docs[i].remove();
+      }
+    }
+  });
+  // 番号データ削除
+  Phone.find({token: req.param('token')}, function(err, docs){
+    if(!err){
+      for(var i = 0, len = docs.length; i < len; i++){
+        docs[i].remove();
+      }
+    }
+  });
   res.json({success: true});
 });
 
@@ -427,11 +442,11 @@ console.log('返信開始');
   });
 });
 //通話がエラーになった
-app.post('/fallback/:token', function(req, res){
+app.post('/fallback', function(req, res){
 
 });
 //Twilio通話OK
-app.post('/status/:token', function(req, res){
+app.post('/status', function(req, res){
 
 });
 
