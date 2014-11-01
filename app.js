@@ -102,13 +102,16 @@ app.get('/start', function(req, res){
   var sid = req.session.sid;
   var auth_token = req.session.auth_token;
   var client = new twilio.RestClient(sid, auth_token);
-  client.incomingPhoneNumbers('JP').local.get({voiceEnabled: true}, function(err, numbers){
-    for(var key in numbers.incoming_phone_numbers){
-      var number = numbers.incoming_phone_numbers[key];
-      option_data.push('<option value="'+number.phone_number+'">' + number.phone_number + '</option>');
+  client.incomingPhoneNumbers.list(function(err, numbers){
+    if(!err){
+      numbers.incomingPhoneNumbers.forEach(function(number){
+        option_data.push('<option value="'+number.phone_number+'">' + number.phone_number + '</option>');
+      });
+      var options = option_data.join('');
+      res.render('start', {title: 'Twilio抽選アプリ', options: options, csrf: req.csrfToken()}); 
+    }else{
+      res.render('error', {title: 'Twilio抽選アプリ', message: err.message}); 
     }
-    var options = option_data.join('');
-    res.render('start', {title: 'Twilio抽選アプリ', options: options, csrf: req.csrfToken()}); 
   });
 });
 
