@@ -1,11 +1,15 @@
 <% extend 'layout' %>
 <h1><%= @title %></h1>
 <p><%= @title %>へようこそ</p>
-<form method="POST" action="/number">
-  <input type="hidden" name="_csrf" value="<%= @csrf %>" />  
+<form id="the_form" method="POST" action="/number?_csrf=<%= @csrf %>" enctype="multipart/form-data">
+  <input id="csrf" type="hidden" name="_csrf" value="<%= @csrf %>" />  
   <select name="phone_number">
     <%- @options %>
   </select>
-  <input type="submit" value="送信" />
+  <br />
+  <textarea id="voice_text" name="voice_text" placeholder="応答"></textarea><br />
+  <input type="file" name="voice_file" id="voice_file" />MP3<br />
+  <button id="tmp_button">動作試験</button>
+  <input type="submit" name="submit" value="利用開始" />
 </form>
 

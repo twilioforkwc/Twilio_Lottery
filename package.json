@@ -15,6 +15,9 @@
     "body-parser": "*",
     "express-session": "*",
     "csurf": "*",
+    "multer": "*",
+    "mkdirp": "*",
+    "fs-extra": "*",
     "cookie-parser": "*"
   }
 }

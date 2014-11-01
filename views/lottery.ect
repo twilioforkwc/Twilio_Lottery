@@ -3,3 +3,14 @@
 <p><%= @title %>へようこそ</p>
 
 <p><%= @message %></p>
+<span id="candidates"><%= @num %></span>人
+<span id="winners">0</span>人
+<div id="token"><%= @token %></div>
+<form id="select_winners">
+  <input id="csrf" type="hidden" name="_csrf" value="<%= @csrf %>" />  
+  <input type="text" id="num" name="num" />人<br />
+  <input type="checkbox" id="no_dup" name="no_dup" />前回発信した人に発信しない<br />
+  <input type="submit" id="select_winners_button" value="発信" />
+</form>
+<div id="status">待機</div>
+<button id="destroy">終了</button>

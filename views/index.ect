@@ -3,7 +3,7 @@
 <p><%= @title %>へようこそ</p>
 <p><%= @message %></p>
 <form action="/start" method="POST">
-  <input type="hidden" name="_csrf" value="<%= @csrf %>" />  
+  <input type="hidden" id="csrf" name="_csrf" value="<%= @csrf %>" />  
   <input type="text" name="account_sid" placeholder="Account SID" /><br />
   <input type="text" name="auth_token" placeholder="Auth Token" /><br />
   <input type="submit" value="送信" />
