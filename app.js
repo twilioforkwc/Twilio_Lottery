@@ -36,8 +36,8 @@ app.set('view engine', 'ect');
 app.use(express['static'](__dirname + '/public'));
 
 // Model
-var Lottery = require('models/lottery');
-var Phone = require('models/phone');
+var Lottery = require(__dirname + '/models/lottery');
+var Phone = require(__dirname + '/models/phone');
 
 // Logs
 if (app.get('env') == 'production') {
