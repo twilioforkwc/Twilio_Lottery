@@ -339,8 +339,8 @@ app.post('/destroy/:token', function(req, res){
 });
 
 //Twilioからのリクエストかチェック
-function validateToken(sid, token, callback){
-  Lottery.find({token: token, accound_sid: sid}, function(err, docs){
+function validateToken(sid, to, callback){
+  Lottery.find({phone_number: to, accound_sid: sid}, function(err, docs){
     if(err || docs.length <= 0){
       error();
     }else{
@@ -362,7 +362,7 @@ function speakErrorMessage(res, message){
 //着電するとTwilioから呼び出される
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();
-  validateToken(req.param('AccountSid'), req.param('token'), function(e){
+  validateToken(req.param('AccountSid'), req.param('To'), function(e){
     Lottery.find({token: req.param('token')}, function(err, docs){
       if(err){
         speakErrorMessage(res, "エラーが発生しました。通話を終了します");
@@ -379,8 +379,8 @@ app.post('/call/:token', function(req, res){
 });
 
 //着電するとTwilioから呼び出される
-app.post('/twiml/:token', function(req, res){
-  validateToken(req.param('AccountSid'), req.params.token, function(e){
+app.post('/twilio', function(req, res){
+  validateToken(req.param('AccountSid'), req.params('To'), function(e){
     //Toからアプリケーションとユーザを検索
     Lottery.find({phone_number: req.param('To')}, function(err, docs){
       if(err || docs.length <= 0){
