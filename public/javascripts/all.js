@@ -26,7 +26,9 @@ $(document).ready(function(){
     });
     return false;
   });
+
   if($('#candidates')){
+alert($('#candidates'));
     setInterval(function(e){
       $.ajax({
         url: '/candidates?id=' + $('#token').html(),
