@@ -383,12 +383,12 @@ function validateToken(req, sid, to, callback, error){
       error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
     }else{
       var doc = docs[0];
-      if (twilio.validateExpressRequest(req, doc.auth_token)){
-//        callback();
-error("こんにちは");
-      }else{
-        error('エラーが発生しました');
-      }
+      callback();
+      //if (twilio.validateExpressRequest(req, doc.auth_token)){
+      //  callback();
+      //}else{
+      //  error('エラーが発生しました');
+      //}
     }
   });
 }
