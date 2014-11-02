@@ -124,7 +124,7 @@ app.get('/start', function(req, res){
 
 function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, file_path, mode){
   var lottery = new Lottery();
-  lottery.sid = sid;
+  lottery.account_sid = sid;
   lottery.auth_token = auth_token;
   lottery.createdAt = new Date();
   lottery.phone_number = number;
@@ -364,9 +364,9 @@ app.post('/destroy/:token', function(req, res){
 function validateToken(sid, to, callback, error){
 console.log(sid);
 console.log(to);
-  Lottery.find({phone_number: "\+" + to, accound_sid: sid}, function(err, docs){
+  Lottery.find({phone_number: to, accound_sid: sid}, function(err, docs){
     if(err || docs.length <= 0){
-      error(to);
+      error();
     }else{
       var doc = dos[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
@@ -446,7 +446,7 @@ console.log('返信開始');
       }
     });
   }, function(e){
-    speakErrorMessage(res, 'エラーが発生しました:' + e);
+    speakErrorMessage(res, 'エラーが発生しました');
   });
 });
 //通話がエラーになった
