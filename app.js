@@ -139,7 +139,14 @@ console.log(mode);
         if(err){
           res.json({success: false, message: 'データを保存できませんでした'});
         }else{
-          res.json({success: true, message: number + 'に電話をかけてください'});
+var r=[];
+Lottery.find({}, function(err, docs){
+for(var p = 0, l = docs.length; p < l; p++){
+  r.push(docs[p].phone_number);
+}
+res.json({success: true, message: "長さは" + r.length});
+});
+//          res.json({success: true, message: number + 'に電話をかけてください'});
         }
         break;
       default:
