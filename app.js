@@ -132,6 +132,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
   lottery.voice_file = file_path;
   lottery.voice_text = voice_text;
   lottery.mode = mode;
+console.log(lottery);
   lottery.save(function(err){
 console.log(mode);
     switch(mode){
@@ -434,6 +435,7 @@ app.post('/twilio', function(req, res){
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
+console.log(lottery_data);
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存

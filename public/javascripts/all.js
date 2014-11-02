@@ -11,15 +11,20 @@ $(document).ready(function(){
   }
   $('#tmp_button').click(function(e){
     updateToken(function(e){
-      var data = $('#the_form').serialize();
-      data += "&mode=trial";
+      var form_data = new FormData();
+      var file_data = $('#voice_file').prop('files')[0];
+      form_data.append('mode', 'trial');
+      form_data.append('voice_text', $('#voice_text').val());
+      form_data.append('phone_number', $('#phone_number').val());
       if($('#voice_file').val()){
-        data += "&" + encodeURIComponent($('#voice_file').val());
+        form_data.append('voice_file', file_data);
       }
       $.ajax({
         url: '/number',
+        enctype: 'multipart/form-data',
+        processData: false,
         method: 'POST',
-        data: data,
+        data: form_data,
         success: function(e){alert("success:" + e.message);},
         error: function(e){alert('エラーが発生しました');}
       });
