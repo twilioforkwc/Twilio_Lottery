@@ -376,20 +376,13 @@ console.log(num);
   return num;
 }
 //Twilioからのリクエストかチェック
-function validateToken(sid, to, callback, error){
-console.log("validate start");
-console.log(sid);
-console.log("to:" + to);
-console.log("formatted:"+format_phone_number(to));
-console.log("validate end");
+function validateToken(req, sid, to, callback, error){
   Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
     if(err || docs.length <= 0){
-console.log('not found');
-console.log(docs);
       error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
     }else{
       var doc = docs[0];
-      if (twilio.validateExpressRequest(sid, doc.auth_token)){
+      if (twilio.validateExpressRequest(req, doc.auth_token)){
         callback();
       }else{
         error('エラーが発生しました');
@@ -411,7 +404,7 @@ function sendXml(res, resp){
 //着電するとTwilioから呼び出される
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();
-  validateToken(req.param('AccountSid'), req.param('To'), function(e){
+  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
     Lottery.find({token: req.param('token')}, function(err, docs){
       if(err){
         speakErrorMessage(res, "エラーが発生しました。通話を終了します");
@@ -429,7 +422,7 @@ app.post('/call/:token', function(req, res){
 
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
-  validateToken(req.param('AccountSid'), req.param('To'), function(e){
+  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
     //Toからアプリケーションとユーザを検索
     Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
       if(err || docs.length <= 0){
