@@ -433,7 +433,7 @@ app.post('/twilio', function(req, res){
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
       }else{
         //見つかったら通話履歴チェック
-        var lottery_data = doc[0];
+        var lottery_data = docs[0];
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
