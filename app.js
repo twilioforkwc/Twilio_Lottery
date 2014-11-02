@@ -401,7 +401,6 @@ console.log(docs);
 //Twilioでエラーメッセージを話す
 function speakErrorMessage(res, message){
   var resp = new twilio.TwimlResponse();
-//  res.send(resp.say(message, {language: 'ja-jp'}), {'Content-Type': 'text/xml'});
   res.writeHead(200, {'Content-Type': 'text/xml'});
   res.end(resp.say(message, {language: 'ja-jp'}).toString());
 }
@@ -451,6 +450,12 @@ app.post('/twilio', function(req, res){
               }else{
                 //指定された方法で返信を開始
 console.log('返信開始');
+                var l = docs[0];
+                if(l.voice_file){
+                  sendXml(res, resp.play("/" + l.voice_file));
+                }else{
+                  sendXml(res, resp.say(l.voice_text));
+                }
               }
             });
           }else{
