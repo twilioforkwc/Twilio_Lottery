@@ -159,7 +159,7 @@ console.log(mode);
 app.post('/number', function(req, res){
   var sid = req.session.sid;
   var auth_token = req.session.auth_token;
-  var number = format_phone_number(req.param('phone_number'));
+  var number = req.param('phone_number');
   var voice_text = req.param('voice_text');
   var voice_file = req.param('voice_file');
   var mode = req.param('mode');
@@ -194,7 +194,7 @@ app.post('/number', function(req, res){
     });
   }
   //同じ電話番号が登録されていたらTrialなら消して本番ならエラー
-  Lottery.find({phone_number: number}, function(err, docs){
+  Lottery.find({phone_number: format_phone_number(number)}, function(err, docs){
     var data =[];
     if(docs.length > 0){
       for(var i = 0, len = docs.length; i < len; i++){
