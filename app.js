@@ -364,11 +364,13 @@ app.post('/destroy/:token', function(req, res){
 function validateToken(sid, to, callback, error){
 console.log(sid);
 console.log(to);
-  Lottery.find({phone_number: to, accound_sid: sid}, function(err, docs){
+  Lottery.find({account_sid: sid, phone_number: to}, function(err, docs){
     if(err || docs.length <= 0){
+console.log('not found');
+console.log(docs);
       error();
     }else{
-      var doc = dos[0];
+      var doc = docs[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
         callback();
       }else{
