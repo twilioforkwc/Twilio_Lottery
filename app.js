@@ -140,16 +140,7 @@ console.log(mode);
         if(err){
           res.json({success: false, message: 'データを保存できませんでした'});
         }else{
-//TODO
-var r=[];
-Lottery.find({account_sid: sid, phone_number: format_phone_number(number)}, function(err, docs){
-for(var p = 0, l = docs.length; p < l; p++){
-  r.push(docs[p].phone_number);
-}
-res.json({success: true, message: "長さは" + r.length});
-});
-//          res.json({success: true, message: number + 'に電話をかけてください'});
-//TODO
+          res.json({success: true, message: number + 'に電話をかけてください'});
         }
         break;
       default:
@@ -348,6 +339,17 @@ function phoneCall(args){
     args.save();
   });
 }
+
+//Ajaxで当選者情報を受け取る
+app.get('/s/:token', function(req, res){
+  Phone.where('token', req.param('token')).where('status', 'calling').where('status', 'won').where('status', error).exec(function(err, docs){
+    var data = [];
+    for(var i = 0, l = docs.length; i < l; i++){
+      data.push({status: docs[i].status, phone_number: docs[i].phone_number});
+    }
+    res.json(data);
+  });
+});
 
 // 終了
 app.post('/destroy/:token', function(req, res){

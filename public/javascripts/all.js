@@ -51,6 +51,8 @@ $(document).ready(function(){
     }, 3000);
   }
 
+  var winner_timer;
+
   $('#select_winners_button').click(function(){
     var data = $('#select_winners').serialize();
     $.ajax({
@@ -60,6 +62,36 @@ $(document).ready(function(){
       success: function(e){
         if(e.success === false){
           alert(e.message);
+        }else{
+          winner_timer = setInterval(function(){
+            $.ajax({
+              url: '/s/' + $('#token').html(),
+              success: function(e){
+               $('#table').html("");
+               for(var i = 0, l = e.data.length; i < l; i++){
+                var status;
+                switch(e.data[i].status){
+                  case "calling":
+                    status = '発信中';
+                    break;
+                  case "online":
+                    status = '通話中';
+                    break;
+                  case "error":
+                    status = 'エラー';
+                    break;
+                  case "won":
+                    status = '通話終了';
+                    break;
+                  default:
+                    status = '待機中';
+                    break;
+                }
+                $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
+               } 
+              }
+            });
+          });
         }
       }
     });
