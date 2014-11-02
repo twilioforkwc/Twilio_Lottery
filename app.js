@@ -445,12 +445,13 @@ app.post('/twilio', function(req, res){
                 speakErrorMessage(res, '申し訳ございません。エラーが発生しました');
               }else{
                 //指定された方法で返信を開始
-                var l = docs[0];
-                if(l.voice_file){
-                  sendXml(res, resp.play("/" + l.voice_file));
-                }else{
-                  sendXml(res, resp.say(l.voice_text));
-                }
+speakErrorMessage(res, doc[0].voice_text + '、テストです');
+//                var l = docs[0];
+//                if(l.voice_file){
+//                  sendXml(res, resp.play("/" + l.voice_file));
+//                }else{
+//                  sendXml(res, resp.say(l.voice_text));
+//                }
               }
             });
           }else{
