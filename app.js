@@ -374,9 +374,12 @@ app.post('/destroy/:token', function(req, res){
 });
 
 function format_phone_number(number){
-console.log(number);
-  var num = number.replace(/[^\d]/g, '');
-console.log(num);
+  var num;
+  if(number){
+    num = number.replace(/[^\d]/g, '');
+  }else{
+    num = "";
+  }
   return num;
 }
 //Twilioからのリクエストかチェック

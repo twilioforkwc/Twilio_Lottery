@@ -10,7 +10,7 @@ $(document).ready(function(){
     });
   }
   $('#tmp_button').click(function(e){
-    updateToken(function(e){
+    updateToken(function(elem){
       var form_data = new FormData();
       var file_data = $('#voice_file').prop('files')[0];
       form_data.append('mode', 'trial');
@@ -20,9 +20,8 @@ $(document).ready(function(){
       if($('#voice_file').val()){
         form_data.append('voice_file', file_data);
       }
-alert(form_data);
       $.ajax({
-        url: '/number',
+        url: '/number?_csrf=' + $('#csrf').val(),
         enctype: 'multipart/form-data',
         processData: false,
         method: 'POST',
