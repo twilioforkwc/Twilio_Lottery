@@ -415,7 +415,7 @@ app.post('/call/:token', function(req, res){
         if(l.voice_file){
           sendXml(res, resp.play("/" + l.voice_file));
         }else{
-          sendXml(res, resp.say(l.voice_text));
+          speakErrorMessage(res, l.voice_text);
         }
       }
     });
