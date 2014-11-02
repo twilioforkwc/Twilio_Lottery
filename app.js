@@ -127,7 +127,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
   lottery.account_sid = sid;
   lottery.auth_token = auth_token;
   lottery.createdAt = new Date();
-  lottery.phone_number = number;
+  lottery.phone_number = format_phone_number(number);
   lottery.token = generated_token;
   lottery.voice_file = file_path;
   lottery.voice_text = voice_text;
@@ -159,7 +159,7 @@ console.log(mode);
 app.post('/number', function(req, res){
   var sid = req.session.sid;
   var auth_token = req.session.auth_token;
-  var number = req.param('phone_number');
+  var number = format_phone_number(req.param('phone_number'));
   var voice_text = req.param('voice_text');
   var voice_file = req.param('voice_file');
   var mode = req.param('mode');
@@ -360,15 +360,18 @@ app.post('/destroy/:token', function(req, res){
   res.json({success: true});
 });
 
+function format_phone_number(number){
+  return number.replace(/^\+/);
+}
 //Twilioからのリクエストかチェック
 function validateToken(sid, to, callback, error){
 console.log(sid);
 console.log(to);
-  Lottery.find({account_sid: sid, phone_number: to}, function(err, docs){
+  Lottery.find({account_sid: sid, phone_number: to.replace(/^\+/, '')}, function(err, docs){
     if(err || docs.length <= 0){
 console.log('not found');
 console.log(docs);
-      error("指定された番号が見つかりませんでした");
+      error("指定された番号("+to+")が見つかりませんでした");
     }else{
       var doc = docs[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
@@ -414,19 +417,19 @@ app.post('/call/:token', function(req, res){
 app.post('/twilio', function(req, res){
   validateToken(req.param('AccountSid'), req.param('To'), function(e){
     //Toからアプリケーションとユーザを検索
-    Lottery.find({phone_number: req.param('To')}, function(err, docs){
+    Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
         console.log(docs);
       }else{
         //見つかったら通話履歴チェック
-        Phone.find({phone_number: req.param('To')}, function(err, p_docs){
+        Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
             console.log(p_docs);
             var phone = new Phone();
-            phone.phone_number = req.param('To');
+            phone.phone_number = format_phone_number(req.param('To'));
             phone.token = docs[0].token;
             phone.save(function(e){
               if(e){
