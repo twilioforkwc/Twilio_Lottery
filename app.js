@@ -364,7 +364,8 @@ app.post('/destroy/:token', function(req, res){
 function validateToken(sid, to, callback, error){
   Lottery.find({phone_number: to, accound_sid: sid}, function(err, docs){
     if(err || docs.length <= 0){
-      error();
+      //error();
+      speakErrorMessage(to + "が見つかりません");
     }else{
       var doc = dos[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
