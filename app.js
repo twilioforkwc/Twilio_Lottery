@@ -424,6 +424,9 @@ app.post('/call/:token', function(req, res){
 
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
+  speakErrorMessage(res, "こんにちは");
+/*
+
   validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
     //Toからアプリケーションとユーザを検索
     Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
@@ -467,6 +470,7 @@ console.log('返信開始');
   }, function(e){
     speakErrorMessage(res, e);
   });
+*/
 });
 //通話がエラーになった
 app.post('/fallback', function(req, res){
