@@ -139,6 +139,7 @@ console.log(mode);
         if(err){
           res.json({success: false, message: 'データを保存できませんでした'});
         }else{
+//TODO
 var r=[];
 Lottery.find({account_sid: sid, phone_number: format_phone_number(number)}, function(err, docs){
 for(var p = 0, l = docs.length; p < l; p++){
@@ -147,6 +148,7 @@ for(var p = 0, l = docs.length; p < l; p++){
 res.json({success: true, message: "長さは" + r.length});
 });
 //          res.json({success: true, message: number + 'に電話をかけてください'});
+//TODO
         }
         break;
       default:
@@ -375,9 +377,12 @@ console.log(num);
 }
 //Twilioからのリクエストかチェック
 function validateToken(sid, to, callback, error){
+console.log("validate start");
 console.log(sid);
-console.log(to);
-  Lottery.find({account_sid: sid, phone_number: format_phone_number(to)}, function(err, docs){
+console.log("to:" + to);
+console.log("formatted:"+format_phone_number(to));
+console.log("validate end");
+  Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
     if(err || docs.length <= 0){
 console.log('not found');
 console.log(docs);
@@ -431,13 +436,11 @@ app.post('/twilio', function(req, res){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
-        console.log(docs);
       }else{
         //見つかったら通話履歴チェック
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
-            console.log(p_docs);
             var phone = new Phone();
             phone.phone_number = format_phone_number(req.param('To'));
             phone.token = docs[0].token;
