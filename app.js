@@ -379,7 +379,13 @@ function validateToken(sid, to, callback, error){
 //Twilioでエラーメッセージを話す
 function speakErrorMessage(res, message){
   var resp = new twilio.TwimlResponse();
-  res.send(resp.say(message, {language: 'ja-jp'}), {'Content-Type': 'text/xml'});
+//  res.send(resp.say(message, {language: 'ja-jp'}), {'Content-Type': 'text/xml'});
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(resp.say(message, {language: 'ja-jp'}).toString());
+}
+function sendXml(res, resp){
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(resp.toString());
 }
 //着電するとTwilioから呼び出される
 app.post('/call/:token', function(req, res){
@@ -391,9 +397,9 @@ app.post('/call/:token', function(req, res){
       }else{
         var l = docs[0];
         if(l.voice_file){
-          res.send(resp.play("/" + l.voice_file), {'Content-Type': 'text/xml'});
+          sendXml(res, resp.play("/" + l.voice_file));
         }else{
-          res.send(resp.say(l.voice_text), {'Content-Type': 'text/xml'});
+          sendXml(res, resp.say(l.voice_text));
         }
       }
     });
