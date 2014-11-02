@@ -140,7 +140,7 @@ console.log(mode);
           res.json({success: false, message: 'データを保存できませんでした'});
         }else{
 var r=[];
-Lottery.find({}, function(err, docs){
+Lottery.find({account_sid: sid, phone_number: format_phone_number(number)}, function(err, docs){
 for(var p = 0, l = docs.length; p < l; p++){
   r.push(docs[p].phone_number);
 }
