@@ -433,19 +433,21 @@ app.post('/twilio', function(req, res){
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
       }else{
         //見つかったら通話履歴チェック
+        var lottery_data = doc[0];
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
             var phone = new Phone();
             phone.phone_number = format_phone_number(req.param('To'));
-            phone.token = docs[0].token;
+            phone.token = lottery_data.token;
+speakErrorMessage(res, "テスト"+lottery_data.token);
+            //phone.save();
             //指定された方法で返信を開始
-            if(docs[0].voice_file){
-              sendXml(res, resp.play("/" + docs[0].voice_file));
-            }else{
-              sendXml(res, resp.say(docs[0].voice_text));
-            }
-            phone.save();
+            //if(lotter_data.voice_file){
+            //  sendXml(res, resp.play("/" + lottery_data.voice_file));
+            //}else{
+            //  sendXml(res, resp.say(lottery_data.voice_text));
+            //}
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
