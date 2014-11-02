@@ -377,20 +377,19 @@ console.log(num);
 }
 //Twilioからのリクエストかチェック
 function validateToken(req, sid, to, callback, error){
-  Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
-    if(err || docs.length <= 0){
-      error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
-    }else{
-      var doc = docs[0];
-      if (twilio.validateExpressRequest(req, doc.auth_token)){
-console.log('valid');
-        callback();
-      }else{
-console.log('invalid');
-        error('エラーが発生しました');
-      }
-    }
-  });
+  callback();
+  //Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
+  //  if(err || docs.length <= 0){
+  //    error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
+  //  }else{
+  //    var doc = docs[0];
+  //    if (twilio.validateExpressRequest(req, doc.auth_token)){
+  //      callback();
+  //    }else{
+  //      error('エラーが発生しました');
+  //    }
+  //  }
+  //});
 }
 
 //Twilioでエラーメッセージを話す
