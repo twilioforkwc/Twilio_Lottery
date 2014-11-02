@@ -439,21 +439,13 @@ app.post('/twilio', function(req, res){
             var phone = new Phone();
             phone.phone_number = format_phone_number(req.param('To'));
             phone.token = docs[0].token;
-            phone.save(function(e){
-              if(e){
-                //error
-                speakErrorMessage(res, '申し訳ございません。エラーが発生しました');
-              }else{
-                //指定された方法で返信を開始
-speakErrorMessage(res, doc[0].voice_text + '、テストです');
-//                var l = docs[0];
-//                if(l.voice_file){
-//                  sendXml(res, resp.play("/" + l.voice_file));
-//                }else{
-//                  sendXml(res, resp.say(l.voice_text));
-//                }
-              }
-            });
+            phone.save();//function(e){
+            //指定された方法で返信を開始
+            if(docs[0].voice_file){
+              sendXml(res, resp.play("/" + docs[0].voice_file));
+            }else{
+              sendXml(res, resp.say(docs[0].voice_text));
+            }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
