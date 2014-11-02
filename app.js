@@ -383,8 +383,10 @@ function validateToken(req, sid, to, callback, error){
     }else{
       var doc = docs[0];
       if (twilio.validateExpressRequest(req, doc.auth_token)){
+console.log('valid');
         callback();
       }else{
+console.log('invalid');
         error('エラーが発生しました');
       }
     }
