@@ -368,13 +368,13 @@ console.log(to);
     if(err || docs.length <= 0){
 console.log('not found');
 console.log(docs);
-      error();
+      error("指定された番号が見つかりませんでした");
     }else{
       var doc = docs[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
         callback();
       }else{
-        error();
+        error('エラーが発生しました');
       }
     }
   });
@@ -448,7 +448,7 @@ console.log('返信開始');
       }
     });
   }, function(e){
-    speakErrorMessage(res, 'エラーが発生しました');
+    speakErrorMessage(res, e);
   });
 });
 //通話がエラーになった
