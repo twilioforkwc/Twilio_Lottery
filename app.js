@@ -257,13 +257,13 @@ function getCandidates(args, callback){
 
 // 応募者数
 app.get('/candidates', function(req, res){
-  getCandidateCount({token: req.param('token')}, function(num){
+  getCandidateCount({token: req.param('id')}, function(num){
     res.json({num: num});
   });
 });
 //当選者数
 app.get('/winners', function(req, res){
-  getCandidateCount({status: 'win', token: req.param('token')}, function(num){
+  getCandidateCount({status: 'win', token: req.param('id')}, function(num){
     res.json({num: num});
   });
 });
