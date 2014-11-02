@@ -361,17 +361,20 @@ app.post('/destroy/:token', function(req, res){
 });
 
 function format_phone_number(number){
-  return number.replace(/^\+/);
+console.log(number);
+  var num = number.replace(/[^\d]/g, '');
+console.log(num);
+  return num;
 }
 //Twilioからのリクエストかチェック
 function validateToken(sid, to, callback, error){
 console.log(sid);
 console.log(to);
-  Lottery.find({account_sid: sid, phone_number: to.replace(/^\+/, '')}, function(err, docs){
+  Lottery.find({account_sid: sid, phone_number: format_phone_number(to)}, function(err, docs){
     if(err || docs.length <= 0){
 console.log('not found');
 console.log(docs);
-      error("指定された番号("+to+")が見つかりませんでした");
+      error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
     }else{
       var doc = docs[0];
       if (twilio.validateExpressRequest(sid, doc.auth_token)){
