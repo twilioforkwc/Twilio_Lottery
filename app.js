@@ -424,53 +424,50 @@ app.post('/call/:token', function(req, res){
 
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
-  speakErrorMessage(res, "こんにちは");
-/*
-
+  //speakErrorMessage(res, "こんにちは");
   validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
+  speakErrorMessage(res, "こんにちは");
     //Toからアプリケーションとユーザを検索
-    Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
-      if(err || docs.length <= 0){
-        //見つからなかったらエラー処理
-        speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
-      }else{
-        //見つかったら通話履歴チェック
-        Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
-          if(err || p_docs.length <= 0){
-            //履歴が見つからなければ履歴保存
-            var phone = new Phone();
-            phone.phone_number = format_phone_number(req.param('To'));
-            phone.token = docs[0].token;
-            phone.save(function(e){
-              if(e){
-                //error
-                speakErrorMessage(res, '申し訳ございません。エラーが発生しました');
-              }else{
-                //指定された方法で返信を開始
-console.log('返信開始');
-                var l = docs[0];
-                if(l.voice_file){
-                  sendXml(res, resp.play("/" + l.voice_file));
-                }else{
-                  sendXml(res, resp.say(l.voice_text));
-                }
-              }
-            });
-          }else{
-            //２回目ならキャンセル処理（過去の履歴は削除）
-            console.log(p_docs);
-            for(var k = 0, l = p_docs.length; k < l; k++){
-              p_docs[k].remove();
-            }
-            speakErrorMessage(res, 'お申し込みをキャンセルしました');
-          }
-        });
-      }
-    });
+    //Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
+    //  if(err || docs.length <= 0){
+    //    //見つからなかったらエラー処理
+    //    speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
+    //  }else{
+    //    //見つかったら通話履歴チェック
+    //    Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
+    //      if(err || p_docs.length <= 0){
+    //        //履歴が見つからなければ履歴保存
+    //        var phone = new Phone();
+    //        phone.phone_number = format_phone_number(req.param('To'));
+    //        phone.token = docs[0].token;
+    //        phone.save(function(e){
+    //          if(e){
+    //            //error
+    //            speakErrorMessage(res, '申し訳ございません。エラーが発生しました');
+    //          }else{
+    //            //指定された方法で返信を開始
+    //            var l = docs[0];
+    //            if(l.voice_file){
+    //              sendXml(res, resp.play("/" + l.voice_file));
+    //            }else{
+    //              sendXml(res, resp.say(l.voice_text));
+    //            }
+    //          }
+    //        });
+    //      }else{
+    //        //２回目ならキャンセル処理（過去の履歴は削除）
+    //        console.log(p_docs);
+    //        for(var k = 0, l = p_docs.length; k < l; k++){
+    //          p_docs[k].remove();
+    //        }
+    //        speakErrorMessage(res, 'お申し込みをキャンセルしました');
+    //      }
+    //    });
+    //  }
+    //});
   }, function(e){
     speakErrorMessage(res, e);
   });
-*/
 });
 //通話がエラーになった
 app.post('/fallback', function(req, res){
