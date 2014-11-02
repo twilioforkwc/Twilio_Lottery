@@ -412,7 +412,7 @@ app.post('/call/:token', function(req, res){
 app.post('/twilio', function(req, res){
   validateToken(req.param('AccountSid'), req.param('To'), function(e){
     //Toからアプリケーションとユーザを検索
-    Lottery.find({phone_number: req.param('To')}, function(err, docs){
+    Lottery.find({phone_number: '+' + req.param('To')}, function(err, docs){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
