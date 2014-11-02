@@ -28,8 +28,9 @@ app.use(session({
 }));
 
 // CSRF
-var csrfExc = ['/twilio', '/fallback', '/status']; //API calls
+var csrfExc = ['/twilio', '/fallback', '/status', '/l']; //API calls
 app.use(function(req, res, next){
+console.log(req.path);
   if(csrfExc.indexOf(req.path) !== -1){
     next();
   }else{
@@ -280,7 +281,7 @@ function shuffle(array) {
   return array;
 }
 //当選実行
-app.post('/l/:token', function(req, res){
+app.post('/l', function(req, res){
   Lottery.find({token: req.param('token')}, function(err, lotteries){
     if(!err && lotteries[0]){
       var num = parseInt(req.param('num'), 10);

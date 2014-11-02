@@ -3,7 +3,7 @@
 <p><%= @title %>へようこそ</p>
 <form id="the_form" method="POST" action="/number?_csrf=<%= @csrf %>" enctype="multipart/form-data">
   <input id="csrf" type="hidden" name="_csrf" value="<%= @csrf %>" />  
-  <select name="phone_number">
+  <select id="phone_number" name="phone_number">
     <%- @options %>
   </select>
   <br />

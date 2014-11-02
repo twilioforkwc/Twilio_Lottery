@@ -16,9 +16,11 @@ $(document).ready(function(){
       form_data.append('mode', 'trial');
       form_data.append('voice_text', $('#voice_text').val());
       form_data.append('phone_number', $('#phone_number').val());
+      form_data.append('_csrf', $('#csrf').val());
       if($('#voice_file').val()){
         form_data.append('voice_file', file_data);
       }
+alert(form_data);
       $.ajax({
         url: '/number',
         enctype: 'multipart/form-data',
@@ -56,9 +58,9 @@ $(document).ready(function(){
   $('#select_winners_button').click(function(){
     var data = $('#select_winners').serialize();
     $.ajax({
-      url: '/l/' + $('#token').html() + "?csrf=" + $('#csrf').val(),
+      url: '/l/',
       method: 'POST',
-      data: data,
+      data: data + "&token=" + $('#token').html(),
       success: function(e){
         if(e.success === false){
           alert(e.message);
