@@ -440,14 +440,15 @@ app.post('/twilio', function(req, res){
             var phone = new Phone();
             phone.phone_number = format_phone_number(req.param('To'));
             phone.token = lottery_data.token;
-speakErrorMessage(res, "テスト"+lottery_data.token);
-            //phone.save();
+//speakErrorMessage(res, "テスト"+lottery_data.token);
+            phone.save();
             //指定された方法で返信を開始
-            //if(lotter_data.voice_file){
-            //  sendXml(res, resp.play("/" + lottery_data.voice_file));
-            //}else{
-            //  sendXml(res, resp.say(lottery_data.voice_text));
-            //}
+            var resp = new twilio.TwimlResponse();
+            if(lottery_data.voice_file){
+              sendXml(res, resp.play("/" + lottery_data.voice_file));
+            }else{
+              sendXml(res, resp.say(lottery_data.voice_text));
+            }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
