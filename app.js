@@ -464,6 +464,7 @@ console.log('返信開始');
             for(var k = 0, l = p_docs.length; k < l; k++){
               p_docs[k].remove();
             }
+            speakErrorMessage(res, 'お申し込みをキャンセルしました');
           }
         });
       }
