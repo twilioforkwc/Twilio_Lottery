@@ -503,7 +503,7 @@ app.get('/debug', function(req, res){
   });
 });
 
-app.get('/deb', function(req, res){
+app.post('/deb', function(req, res){
   speakErrorMessage(res, "テストです");
 });
 
