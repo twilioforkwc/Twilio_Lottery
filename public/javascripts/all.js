@@ -24,6 +24,7 @@ $(document).ready(function(){
         url: '/number?_csrf=' + $('#csrf').val(),
         enctype: 'multipart/form-data',
         processData: false,
+        contentType: false,
         method: 'POST',
         data: form_data,
         success: function(e){alert("success:" + e.message);},

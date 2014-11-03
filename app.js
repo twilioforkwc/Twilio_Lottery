@@ -410,24 +410,6 @@ function sendXml(res, resp){
   res.writeHead(200, {'Content-Type': 'text/xml'});
   res.end(resp.toString());
 }
-//着電するとTwilioから呼び出される
-app.post('/call/:token', function(req, res){
-  var resp = new twilio.TwimlResponse();
-  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
-    Lottery.find({token: req.param('token')}, function(err, docs){
-      if(err){
-        speakErrorMessage(res, "エラーが発生しました。通話を終了します");
-      }else{
-        var l = docs[0];
-        if(l.voice_file){
-          sendXml(res, resp.play("/" + l.voice_file));
-        }else{
-          speakErrorMessage(res, l.voice_text);
-        }
-      }
-    });
-  });
-});
 
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
@@ -453,7 +435,7 @@ console.log(lottery_data);
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(lottery_data.voice_file){
-              sendXml(res, resp.play("/" + lottery_data.voice_file));
+              sendXml(res, resp.play(lottery_data.voice_file.replace(/public/, '')));
             }else{
               sendXml(res, resp.say(lottery_data.voice_text));
             }
