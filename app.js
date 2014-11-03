@@ -288,6 +288,8 @@ app.post('/select', function(req, res){
         var args = {token: req.param('token')};
         if(req.param('no_dup')){
           args.status = null;
+        }else{
+          args.status = {'$ne': 'won'};
         }
         Phone.find(args, function(err, docs){
           if(err){
