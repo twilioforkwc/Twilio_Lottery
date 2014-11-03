@@ -423,7 +423,7 @@ app.post('/twilio', function(req, res){
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
-console.log(lottery_data);
+//console.log(lottery_data);
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
@@ -435,7 +435,7 @@ console.log(lottery_data);
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(lottery_data.voice_file){
-              sendXml(res, resp.play(lottery_data.voice_file.replace(/public/, '')));
+              sendXml(res, resp.play("http://twilio-lottery.azurewebsites.net" + lottery_data.voice_file.replace(/public/, '')));
             }else{
               sendXml(res, resp.say(lottery_data.voice_text));
             }
