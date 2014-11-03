@@ -11,11 +11,12 @@ $(document).ready(function(){
   }
   $('#tmp_button').click(function(e){
     submitLotter('trial');
+    return false;
   });
   $('#submit_button').click(function(e){
     submitLotter('');
+    return false;
   });
-
 
   function submitLottery(arg){
     var mode = arg;
@@ -49,7 +50,6 @@ $(document).ready(function(){
         error: function(e){alert('エラーが発生しました');}
       });
     });
-    return false;
   }
 
   if($('#candidates').length > 0){
