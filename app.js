@@ -33,6 +33,8 @@ app.use(function(req, res, next){
 console.log(req.path);
   if(csrfExc.indexOf(req.path) !== -1){
     next();
+  }else if(req.path.match(/^\/call\//)){
+    next();
   }else{
     csrf()(req, res, next);
   }
@@ -326,7 +328,7 @@ function phoneCall(req, args){
   client.makeCall({
     to: '+' + args.data.phone_number,
     from: '+' + args.lottery.phone_number,
-    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token + "?_csrf=" + req.csrfToken()
+    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token
   }, function(err, call){
     if(err){
       args.data.status = 'error';
