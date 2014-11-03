@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 // CSRF
-var csrfExc = ['/twilio', '/fallback', '/status', '/l', '/deb']; //API calls
+var csrfExc = ['/twilio', '/fallback', '/status', '/l', '/call', '/deb']; //API calls
 app.use(function(req, res, next){
 console.log(req.path);
   if(csrfExc.indexOf(req.path) !== -1){
