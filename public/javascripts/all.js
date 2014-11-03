@@ -74,7 +74,7 @@ $(document).ready(function(){
   var winner_timer;
 
   $('#select_winners_button').click(function(){
-    updateToken(startSelection());
+    updateToken(startSelection);
     return false;
   });
 
