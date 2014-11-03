@@ -341,7 +341,7 @@ function phoneCall(req, args){
 
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();
-  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
+  validateToken(req, res, req.param('AccountSid'), req.param('To'), function(e){
     Lottery.find({token: req.param('token')}, function(err, docs){
       if(err){
         speakErrorMessage(res, "エラーが発生しました。通話を終了します");
@@ -400,21 +400,21 @@ function format_phone_number(number){
   return num;
 }
 //Twilioからのリクエストかチェック
-function validateToken(req, sid, to, callback, error){
+function validateToken(req, res, sid, to, callback, error){
   //callback();
-  Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
-    if(err || docs.length <= 0){
-      speakErrorMessage(res, "指定された番号("+format_phone_number(to)+")が見つかりませんでした");
-    }else{
-      var doc = docs[0];
+  //Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
+  //  if(err || docs.length <= 0){
+  //    speakErrorMessage(res, "指定された番号("+format_phone_number(to)+")が見つかりませんでした");
+  //  }else{
+  //    var doc = docs[0];
       callback();
       //if (twilio.validateExpressRequest(req, doc.auth_token)){
       //  callback();
       //}else{
       //  error('エラーが発生しました');
       //}
-    }
-  });
+  //  }
+  //});
 }
 
 //Twilioでエラーメッセージを話す
@@ -431,9 +431,9 @@ function sendXml(res, resp){
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
   //speakErrorMessage(res, "こんにちは");
-  validateToken(req, req.param('AccountSid'), req.param('From'), function(e){
+  validateToken(req, res, req.param('AccountSid'), req.param('From'), function(e){
     //Toからアプリケーションとユーザを検索
-    Lottery.find({phone_number: format_phone_number(req.param('From'))}, function(err, docs){
+    Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
