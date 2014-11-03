@@ -27,7 +27,10 @@ $(document).ready(function(){
         contentType: false,
         method: 'POST',
         data: form_data,
-        success: function(e){alert("success:" + e.message);},
+        success: function(e){
+          alert("success:" + e.message);
+          $('#debug').html(e.debug);
+        },
         error: function(e){alert('エラーが発生しました');}
       });
     });

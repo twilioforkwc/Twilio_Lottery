@@ -141,7 +141,7 @@ console.log(mode);
         if(err){
           res.json({success: false, message: 'データを保存できませんでした'});
         }else{
-          res.json({success: true, message: number + 'に電話をかけてください'});
+          res.json({success: true, message: number + 'に電話をかけてください', debug: lottery});
         }
         break;
       default:
@@ -435,7 +435,7 @@ app.post('/twilio', function(req, res){
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(lottery_data.voice_file){
-              sendXml(res, resp.play("http://twilio-lottery.azurewebsites.net" + lottery_data.voice_file.replace(/public/, '')));
+              sendXml(res, resp.play(lottery_data.voice_file.replace(/public/, '')));
             }else{
               sendXml(res, resp.say(lottery_data.voice_text));
             }
