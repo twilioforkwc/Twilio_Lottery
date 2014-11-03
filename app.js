@@ -348,7 +348,6 @@ app.post('/call/:token', function(req, res){
       }else{
         var l = docs[0];
         if(l.voice_file){
-          sendXml(res, resp.play("/" + l.voice_file));
           sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + l.voice_file.replace(/public/, '').replace(/\\/g, '/')));
         }else{
           speakErrorMessage(res, l.voice_text);
