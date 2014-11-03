@@ -259,7 +259,7 @@ app.get('/candidates', function(req, res){
 });
 //当選者数
 app.get('/winners', function(req, res){
-  getCandidateCount({status: 'win', token: req.param('id')}, function(num){
+  getCandidateCount({status: 'won', token: req.param('id')}, function(num){
     res.json({num: num});
   });
 });
@@ -328,9 +328,6 @@ function phoneCall(req, args){
     from: '+' + args.lottery.phone_number,
     url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token + "?_csrf=" + req.csrfToken()
   }, function(err, call){
-console.log(err);
-console.log(args.lottery);
-console.log(args.data);
     if(err){
       args.data.status = 'error';
     }else{
@@ -453,12 +450,15 @@ app.post('/twilio', function(req, res){
             phone.save();
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
-            //if(lottery_data.voice_file){
-            //  sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
-            //}else{
-            //  sendXml(res, resp.say(lottery_data.voice_text));
-            //}
-            speakErrorMessage(res, 'お申し込みを受け付けました');
+            if(phone.status == 'trial'){
+              speakErrorMessage(res, 'お申し込みを受け付けました');
+            }else{
+              if(lottery_data.voice_file){
+                sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+              }else{
+                sendXml(res, resp.say(lottery_data.voice_text));
+              }
+            }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
