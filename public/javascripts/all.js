@@ -10,7 +10,7 @@ $(document).ready(function(){
     });
   }
   $('#tmp_button').click(function(e){
-    submitLotter('trial');
+    submitLottery('trial');
     return false;
   });
   $('#submit_button').click(function(e){
