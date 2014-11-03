@@ -326,7 +326,7 @@ function phoneCall(req, args){
   client.makeCall({
     to: '+' + args.data.phone_number,
     from: '+' + args.lottery.phone_number,
-    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token
+    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token + "?_csrf=" + req.csrfToken()
   }, function(err, call){
 console.log(err);
 console.log(args.lottery);
