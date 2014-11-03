@@ -455,11 +455,12 @@ app.post('/twilio', function(req, res){
             phone.save();
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
-            if(lottery_data.voice_file){
-              sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
-            }else{
-              sendXml(res, resp.say(lottery_data.voice_text));
-            }
+            //if(lottery_data.voice_file){
+            //  sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+            //}else{
+            //  sendXml(res, resp.say(lottery_data.voice_text));
+            //}
+            speakErrorMessage(res, 'お申し込みを受け付けました');
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
