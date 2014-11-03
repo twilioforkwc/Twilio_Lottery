@@ -74,6 +74,11 @@ $(document).ready(function(){
   var winner_timer;
 
   $('#select_winners_button').click(function(){
+    updateToken(startSelection());
+    return false;
+  });
+
+  function startSelection(){
     var data = $('#select_winners').serialize();
     $.ajax({
       url: '/l/',
@@ -116,7 +121,7 @@ $(document).ready(function(){
       }
     });
     return false;
-  });
+  }
 
   $('#destroy').click(function(){
     if(confirm("抽選を終了しますか？この操作は取り消しできません")){
