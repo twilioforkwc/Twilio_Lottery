@@ -136,22 +136,17 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
 console.log(lottery);
   lottery.save(function(err){
 console.log(mode);
-    switch(mode){
-      case "trial":
-        if(err){
-          res.json({success: false, message: 'データを保存できませんでした'});
-        }else{
+    if(err){
+      res.json({success: false, message: 'データを保存できませんでした'});
+    }else{
+      switch(mode){
+        case "trial":
           res.json({success: true, message: number + 'に電話をかけてください', debug: lottery});
-        }
-        break;
-      default:
-        if(err){
-          req.session.message = "エラーが発生しました";
-          res.redirect('/error');
-        }else{
-          res.redirect('/l/' + generated_token);
-        }
-        break;
+          break;
+        default:
+          res.json({success: true, message: number + 'に電話をかけてください', url: '/l/' + generated_token});
+          break;
+      }
     }
   });
 }
@@ -306,11 +301,12 @@ app.post('/l', function(req, res){
               lotteries[0].save(function(e){
                 if(e){
 console.log(e);
+                  res.json({success: false, message: "データベースにエラーが発生しました"});
                 }else{
                   var data = shuffle(docs);
                   for(var i = 0, len = data.length; i < len; i++){
                     data[i].status = 'calling';
-                    phoneCall({data: data[i], lottery: lotteries[0]});
+                    phoneCall(req, {data: data[i], lottery: lotteries[0]});
                   }
                 }
               });
@@ -325,21 +321,43 @@ console.log(e);
 });
 
 // 当選者に電話をかける
-function phoneCall(args){
+function phoneCall(req, args){
   var client = new twilio.RestClient(args.lottery.account_sid, args.lottery.auth_token);
   client.makeCall({
     to: args.data.phone_number,
     from: args.lottery.phone_number,
-    url: '/call/' + args.lottery.token
+    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token
   }, function(err, call){
+console.log(err);
+console.log(args.lottery);
+console.log(args.data);
     if(err){
       args.data.status = 'error';
     }else{
       args.data.status = 'won';
     }
-    args.save();
+    args.data.save();
   });
 }
+
+app.post('/call/:token', function(req, res){
+  var resp = new twilio.TwimlResponse();
+  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
+    Lottery.find({token: req.param('token')}, function(err, docs){
+      if(err){
+        speakErrorMessage(res, "エラーが発生しました。通話を終了します");
+      }else{
+        var l = docs[0];
+        if(l.voice_file){
+          sendXml(res, resp.play("/" + l.voice_file));
+          sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + l.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+        }else{
+          speakErrorMessage(res, l.voice_text);
+        }
+      }
+    });
+  });
+});
 
 //Ajaxで当選者情報を受け取る
 app.get('/s/:token', function(req, res){

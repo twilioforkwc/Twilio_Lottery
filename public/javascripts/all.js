@@ -44,7 +44,7 @@ $(document).ready(function(){
             alert("success:" + e.message);
             $('#debug').html(e.debug);
           }else{
-            location.href = "/l/" + $('#token').html();
+            location.href = e.url;
           }
         },
         error: function(e){alert('エラーが発生しました');}
