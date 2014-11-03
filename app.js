@@ -446,7 +446,7 @@ app.post('/twilio', function(req, res){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
             var phone = new Phone();
-            phone.phone_number = format_phone_number(req.param('To'));
+            phone.phone_number = format_phone_number(req.param('From'));
             if(docs[0].mode == 'trial'){
               phone.status = 'trial';
             }
