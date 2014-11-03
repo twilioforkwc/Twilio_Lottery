@@ -10,10 +10,21 @@ $(document).ready(function(){
     });
   }
   $('#tmp_button').click(function(e){
+    submitLotter('trial');
+  });
+  $('#submit_button').click(function(e){
+    submitLotter('');
+  });
+
+
+  function submitLottery(arg){
+    var mode = arg;
     updateToken(function(elem){
       var form_data = new FormData();
       var file_data = $('#voice_file').prop('files')[0];
-      form_data.append('mode', 'trial');
+      if(mode == 'trial'){
+        form_data.append('mode', 'trial');
+      }
       form_data.append('voice_text', $('#voice_text').val());
       form_data.append('phone_number', $('#phone_number').val());
       form_data.append('_csrf', $('#csrf').val());
@@ -28,14 +39,18 @@ $(document).ready(function(){
         method: 'POST',
         data: form_data,
         success: function(e){
-          alert("success:" + e.message);
-          $('#debug').html(e.debug);
+          if(mode == 'trial'){
+            alert("success:" + e.message);
+            $('#debug').html(e.debug);
+          }else{
+            location.href = "/l/" + $('#token').html();
+          }
         },
         error: function(e){alert('エラーが発生しました');}
       });
     });
     return false;
-  });
+  }
 
   if($('#candidates').length > 0){
     setInterval(function(e){
