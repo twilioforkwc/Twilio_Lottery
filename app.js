@@ -435,7 +435,7 @@ app.post('/twilio', function(req, res){
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(lottery_data.voice_file){
-              sendXml(res, resp.play(lottery_data.voice_file.replace(/public/, '')));
+              sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '')));
             }else{
               sendXml(res, resp.say(lottery_data.voice_text));
             }
