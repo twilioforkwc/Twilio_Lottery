@@ -14,7 +14,7 @@ $(document).ready(function(){
     return false;
   });
   $('#submit_button').click(function(e){
-    submitLotter('');
+    submitLottery('');
     return false;
   });
 
