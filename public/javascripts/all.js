@@ -81,7 +81,7 @@ $(document).ready(function(){
   function startSelection(){
     var data = $('#select_winners').serialize();
     $.ajax({
-      url: '/l/',
+      url: '/select/',
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){

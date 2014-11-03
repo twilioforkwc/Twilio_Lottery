@@ -276,7 +276,7 @@ function shuffle(array) {
   return array;
 }
 //当選実行
-app.post('/l', function(req, res){
+app.post('/select', function(req, res){
   Lottery.find({token: req.param('token')}, function(err, lotteries){
     if(!err && lotteries[0]){
       var num = parseInt(req.param('num'), 10);
