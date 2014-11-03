@@ -441,7 +441,6 @@ app.post('/twilio', function(req, res){
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
-//console.log(lottery_data);
         Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
@@ -451,7 +450,6 @@ app.post('/twilio', function(req, res){
               phone.status = 'trial';
             }
             phone.token = lottery_data.token;
-//speakErrorMessage(res, "テスト"+lottery_data.token);
             phone.save();
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
