@@ -486,5 +486,26 @@ app.post('/status', function(req, res){
 
 });
 
+app.get('/debug', function(req, res){
+  var message = "";
+  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
+  client.makeCall({
+    to: '+' + '818054694667',
+    from: '+' + '815031596333',
+    url: 'http://twilio-lottery.azurewebsites.net/deb'
+  }, function(err, call){
+    if(err){
+      message = "エラー";
+    }else{
+      message = 'ok';
+    }
+    res.json({message: message});
+  });
+});
+
+app.get('/deb', function(req, res){
+  speakErrorMessage(res, "テストです");
+});
+
 // Here we go!
 app.listen(process.env.PORT || 3000);
