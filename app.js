@@ -404,7 +404,7 @@ function validateToken(req, sid, to, callback, error){
   //callback();
   Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
     if(err || docs.length <= 0){
-      error("指定された番号("+format_phone_number(to)+")が見つかりませんでした");
+      speakErrorMessage(res, "指定された番号("+format_phone_number(to)+")が見つかりませんでした");
     }else{
       var doc = docs[0];
       callback();
@@ -431,9 +431,9 @@ function sendXml(res, resp){
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
   //speakErrorMessage(res, "こんにちは");
-  validateToken(req, req.param('AccountSid'), req.param('To'), function(e){
+  validateToken(req, req.param('AccountSid'), req.param('From'), function(e){
     //Toからアプリケーションとユーザを検索
-    Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
+    Lottery.find({phone_number: format_phone_number(req.param('From'))}, function(err, docs){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
         speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
