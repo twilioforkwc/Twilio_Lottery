@@ -304,7 +304,8 @@ app.post('/select', function(req, res){
                   res.json({success: false, message: "データベースにエラーが発生しました"});
                 }else{
                   var data = shuffle(docs);
-                  for(var i = 0, len = data.length; i < len; i++){
+                  var max = req.param('num') - 1;
+                  for(var i = 0, len = data.length; i < max; i++){
                     data[i].status = 'calling';
                     phoneCall(req, {data: data[i], lottery: lotteries[0]});
                   }
