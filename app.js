@@ -455,7 +455,8 @@ app.post('/twilio', function(req, res){
                 speakErrorMessage(res, 'デバッグです');
                 //sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
               }else{
-                sendXml(res, resp.say(lottery_data.voice_text));
+                speakErrorMessage(res, 'これはデバッグです');
+                //sendXml(res, resp.say(lottery_data.voice_text));
               }
             }else{
               speakErrorMessage(res, 'お申し込みを受け付けました');
