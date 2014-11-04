@@ -438,7 +438,7 @@ app.post('/twilio', function(req, res){
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
-        Phone.find({phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
+        Phone.find({token: lottery_data.token, phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
             var phone = new Phone();
@@ -464,9 +464,7 @@ app.post('/twilio', function(req, res){
             //２回目ならキャンセル処理（過去の履歴は削除）
             console.log(p_docs);
             for(var k = 0, l = p_docs.length; k < l; k++){
-              if(p_docs[k].status == 'trial'){
-                p_docs[k].remove();
-              }
+              p_docs[k].remove();
             }
             speakErrorMessage(res, 'お申し込みをキャンセルしました');
           }
