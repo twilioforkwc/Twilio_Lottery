@@ -452,7 +452,8 @@ app.post('/twilio', function(req, res){
             var resp = new twilio.TwimlResponse();
             if(phone.status == 'trial'){
               if(lottery_data.voice_file){
-                sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+                speakErrorMessage(res, 'デバッグです');
+                //sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
               }else{
                 sendXml(res, resp.say(lottery_data.voice_text));
               }
