@@ -2,9 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose'); 
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
-//var busboy = require('connect-busboy');
 var multer  = require('multer');
-//var formidable = require('formidable');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var ECT = require('ect');
@@ -61,7 +59,6 @@ var connectionString = process.env.CUSTOMCONNSTR_MONGOLAB_URI;
 mongoose.connect(connectionString);
 
 // File upload
-//app.use(busboy());
 app.use(multer({
   dest: "./public/files/"
 }));
@@ -304,7 +301,6 @@ app.post('/select', function(req, res){
               lotteries[0].status = 'calling';
               lotteries[0].save(function(e){
                 if(e){
-console.log(e);
                   res.json({success: false, message: "データベースにエラーが発生しました"});
                 }else{
                   var data = shuffle(docs);
@@ -454,13 +450,13 @@ app.post('/twilio', function(req, res){
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(phone.status == 'trial'){
-              speakErrorMessage(res, 'お申し込みを受け付けました');
-            }else{
               if(lottery_data.voice_file){
                 sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
               }else{
                 sendXml(res, resp.say(lottery_data.voice_text));
               }
+            }else{
+              speakErrorMessage(res, 'お申し込みを受け付けました');
             }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
