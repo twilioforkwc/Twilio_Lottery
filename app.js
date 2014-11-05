@@ -132,9 +132,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
   lottery.voice_file = file_path;
   lottery.voice_text = voice_text;
   lottery.mode = mode;
-console.log(lottery);
   lottery.save(function(err){
-console.log(mode);
     if(err){
       res.json({success: false, message: 'データを保存できませんでした'});
     }else{
