@@ -101,25 +101,36 @@ $(document).ready(function(){
               success: function(e){
                $('#table').html("");
                for(var i = 0, l = e.data.length; i < l; i++){
-                var status;
+                var status, postfix, className;
                 switch(e.data[i].status){
                   case "calling":
                     status = '発信中';
+                    postfix = '';
+                    className = 'calling';
                     break;
                   case "online":
                     status = '通話中';
+                    postfix = '';
+                    className = 'calling';
                     break;
                   case "error":
                     status = 'エラー';
+                    className = 'end';
+                    postfix = '';
                     break;
                   case "won":
                     status = '通話終了';
+                    className = 'end';
+                  postfix = '<li class="winner">当選</li>';
                     break;
                   default:
                     status = '待機中';
+                    className = 'calling';
+                    postfix = '';
                     break;
                 }
-                $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
+//                $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
+                $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ + postfix + '</ul></td></tr>');
                } 
               }
             });

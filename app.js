@@ -104,7 +104,7 @@ app.post('/start', function(req, res){
 });
 
 function display_phone_number(number){
-  return number.replace(/\+81/, '0').replace(/^050/, '050-').replace(/050-([\d][\d][\d][\d])([\d][\d][\d][\d])$/, function(str, p1, p2, offset, s){
+  return number.replace(/\+81/, '0').replace(/^0120/, '0120-').replace(/0120-([\d][\d][\d])([\d][\d][\d])/, function(str, p1, p2, offset, s){return '0120-' + p1 + '-' + p2;}).replace(/^050/, '050-').replace(/050-([\d][\d][\d][\d])([\d][\d][\d][\d])$/, function(str, p1, p2, offset, s){
     return '050-' + p1 + "-" +  p2;
   });
 }
@@ -242,7 +242,7 @@ app.get('/l/:token', function(req, res){
       message = "";
     }
     getCandidateCount({token: docs[0].token}, function(num){
-      res.render('lottery', {title: 'Twilio抽選アプリ', message: message, num: num, token: docs[0].token, csrf: req.csrfToken()});  
+      res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken()});  
     });
   });
 });
