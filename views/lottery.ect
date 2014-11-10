@@ -1,6 +1,152 @@
 <% extend 'layout' %>
-<h1><%= @title %></h1>
-<p><%= @title %>へようこそ</p>
+	<ul class="progress">
+		<li>ログイン</li>
+		<li>仮設定</li>
+		<li class="current last">抽選開始</li>
+	</ul>
+	<div id="wrapper">
+		<h2>応募電話番号　<strong>000-0000-0000</strong></h2>
+		<div class="leftBox">
+			<dl class="tableLayout">
+				<dt>設定状態</dt>
+				<dd>
+					<!--呼び出し中に表示-->
+					<span class="calling">呼び出し中</span>
+					<!--/呼び出し中に表示-->
+					<!--待機中に表示-->
+					<span class="waiting">待機中</span>
+					<!--/待機中に表示-->
+					<!--終了時に表示-->
+					<span class="end">終了</span>
+					<!--/終了時に表示-->
+				</dd>
+				<dt>当選人数</dt>
+				<dd>
+					<input type="text" name="" value="" class="sizeS">
+					&nbsp;人</dd>
+			</dl>
+			<ul class="submitArea">
+				<li>
+					<form action="temporary_01.html">
+						<button type="button" class="gray">中止</button>
+					</form>
+				</li>
+				<li>
+					<form action="temporary_01.html">
+						<button type="button" class="red">抽選開始</button>
+						<br>
+						<input type="checkbox" name="" value="" id="exclude" checked>
+						<label for="exclude">当選者をのぞく</label>
+					</form>
+				</li>
+			</ul>
+		</div>
+		<div class="rightBox">
+			<h3>当選者リスト</h3>
+			<div class="countArea">
+				<div class="signUp">
+					<p class="count">8888</p>
+					<p class="text">登録完了</p>
+				</div>
+				<div class="notification">
+					<p class="count">8888</p>
+					<p class="text">通知済</p>
+				</div>
+				<div class="winner">
+					<p class="count">8888</p>
+					<p class="text">当選</p>
+				</div>
+			</div>
+			<div class="prizewinner">
+				<table>
+					<tr>
+						<th>1111</th>
+						<td><ul>
+								<li class="calling">呼び出し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2222</th>
+						<td><ul>
+								<li class="busy">話し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2344</th>
+						<td><ul>
+								<li class="end">通話終了</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>1111</th>
+						<td><ul>
+								<li class="calling">呼び出し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2222</th>
+						<td><ul>
+								<li class="busy">話し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2344</th>
+						<td><ul>
+								<li class="end">通話終了</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>1111</th>
+						<td><ul>
+								<li class="calling">呼び出し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2222</th>
+						<td><ul>
+								<li class="busy">話し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2344</th>
+						<td><ul>
+								<li class="end">通話終了</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>1111</th>
+						<td><ul>
+								<li class="calling">呼び出し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2222</th>
+						<td><ul>
+								<li class="busy">話し中</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+					<tr>
+						<th>2344</th>
+						<td><ul>
+								<li class="end">通話終了</li>
+								<li class="winner">当選</li>
+							</ul></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
 
 <p><%= @message %></p>
 <span id="candidates"><%= @num %></span>人

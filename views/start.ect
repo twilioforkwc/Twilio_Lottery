@@ -1,15 +1,55 @@
 <% extend 'layout' %>
-<h1><%= @title %></h1>
-<p><%= @title %>へようこそ</p>
 <form id="the_form" method="POST" action="/number?_csrf=<%= @csrf %>" enctype="multipart/form-data">
   <input id="csrf" type="hidden" name="_csrf" value="<%= @csrf %>" />  
-  <select id="phone_number" name="phone_number">
+	<ul class="progress">
+		<li>ログイン</li>
+		<li class="current">仮設定</li>
+		<li>抽選開始</li>
+	</ul>
+	<div id="wrapper">
+    <div id="message_area"></div>
+		<dl class="tableLayout">
+			<dt>利用する電話番号</dt>
+			<dd>
+				<select class="selectBox" name="phone_number" id="phone_number">
+					<option value="" selected="selected">選択してください</option>
     <%- @options %>
-  </select>
-  <br />
-  <textarea id="voice_text" name="voice_text" placeholder="応答"></textarea><br />
-  <input type="file" name="voice_file" id="voice_file" />MP3<br />
-  <button id="tmp_button">動作試験</button>
-  <button id="submit_button">利用開始</button>
+				</select>
+				※ RequestURL が変更されます</dd>
+			<dt>利用する SMS 番号</dt>
+			<dd>
+				<select class="selectBox" name="sms_phone_number" id="sms_phone_number">
+					<option value="" selected="selected">選択してください</option>
+    <%- @sms_options %>
+				</select></dd>
+			<dt class="noTable">アナウンス設定</dt>
+			<dd>
+				<dl class="noTable">
+					<dt>テキスト入力で音声読み上げ</dt>
+					<dd>
+						<textarea name="voice_text" id="voice_text" cols="40" rows="4" class="sizeL"></textarea>
+					</dd>
+					<dt>mp3 をアップロード</dt>
+					<dd class="fileUploder">
+						<!--デザイン反映用フォーム-->
+						<input type="text" class="txt" readonly>
+						<input type="button" value="参照" class="fileBtn">
+						<input type="file" id="voice_file" name="voice_file" class="uploader">
+					</dd>
+				</dl>
+			</dd>
+		</dl>
+		<ul class="submitArea">
+			<li>
+				<form method="post" action="temporary_01.html">
+					<button id="tmp_button" type="button" class="red">仮設定</button>
+				</form>
+			</li>
+			<li>
+				<button id="submit_button" type="button" disabled>投票を開始する</button>
+			</li>
+		</ul>
+	</div>
 </form>
+
 

@@ -1,13 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-  <head>
-    <title><%= @title %></title> 
-    <link rel='stylesheet' href='/css/style.css' />
-    <script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="/javascripts/all.js"></script>
-  </head>
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Twilio投票アプリ</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+<link rel='stylesheet' href='/css/style.css' />
+<link rel="shortcut icon" href="/img/Twilio_64.png">
+<script type="text/javascript" src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/javascripts/all.js"></script>
+</head>
 <body>
+<div id="container">
+	<h1><img src="/img/h1.png" width="321" height="46" alt="Twilio投票アプリ"></h1>
   <% content %>
+</div>
+<div id="footer">
+	<p><a href="#">抽選アプリを終了する</a></p>
+</div>
+<script src="/js/lib.js"></script>
 </body>
 </html>
 

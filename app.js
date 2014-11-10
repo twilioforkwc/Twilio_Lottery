@@ -31,7 +31,7 @@ app.use(function(req, res, next){
 console.log(req.path);
   if(csrfExc.indexOf(req.path) !== -1){
     next();
-  }else if(req.path.match(/^\/call\//)){
+  }else if(req.path.match(/^\/(call|fallback|status)\//)){
     next();
   }else{
     csrf()(req, res, next);
@@ -103,19 +103,30 @@ app.post('/start', function(req, res){
   }
 });
 
+function display_phone_number(number){
+  return number.replace(/\+81/, '0').replace(/^050/, '050-').replace(/050-([\d][\d][\d][\d])([\d][\d][\d][\d])$/, function(str, p1, p2, offset, s){
+    return '050-' + p1 + "-" +  p2;
+  });
+}
+
 app.get('/start', function(req, res){
   //アップグレードアカウントなら利用可能な電話番号リストを作成
   var option_data = [];
+  var sms_option_data = [];
   var sid = req.session.sid;
   var auth_token = req.session.auth_token;
   var client = new twilio.RestClient(sid, auth_token);
   client.incomingPhoneNumbers.list(function(err, numbers){
     if(!err){
       numbers.incomingPhoneNumbers.forEach(function(number){
-        option_data.push('<option value="'+number.phone_number+'">' + number.phone_number + '</option>');
+        option_data.push('<option value="'+number.phone_number+'">' + display_phone_number(number.phone_number) + '</option>');
+        if(number.capabilities.sms){
+          sms_option_data.push('<option value="'+number.phone_number+'">' + display_phone_number(number.phone_number) + '</option>');
+        }
       });
       var options = option_data.join('');
-      res.render('start', {title: 'Twilio抽選アプリ', options: options, csrf: req.csrfToken()}); 
+      var sms_options = sms_option_data.join('');
+      res.render('start', {title: 'Twilio抽選アプリ', options: options, sms_options: sms_options, csrf: req.csrfToken()}); 
     }else{
       res.render('error', {title: 'Twilio抽選アプリ', message: err.message}); 
     }
@@ -128,6 +139,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
   lottery.auth_token = auth_token;
   lottery.createdAt = new Date();
   lottery.phone_number = format_phone_number(number);
+  lottery.sms_phone_number = format_phone_number(req.param('sms_phone_number'));
   lottery.token = generated_token;
   lottery.voice_file = file_path;
   lottery.voice_text = voice_text;
@@ -325,7 +337,9 @@ function phoneCall(req, args){
   client.makeCall({
     to: '+' + args.data.phone_number,
     from: '+' + args.lottery.phone_number,
-    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token
+    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token,
+    fallbackUrl: req.protocol + "://" + req.hostname + '/fallback/' + args.lottery.token,
+    statusCallback: req.protocol + "://" + req.hostname + '/status/' + args.lottery.token
   }, function(err, call){
     if(err){
       args.data.status = 'error';
@@ -436,16 +450,18 @@ app.post('/twilio', function(req, res){
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
-        Phone.find({token: lottery_data.token, phone_number: format_phone_number(req.param('To'))}, function(err, p_docs){
+        Phone.find({token: lottery_data.token, phone_number: format_phone_number(req.param('From'))}, function(err, p_docs){
           if(err || p_docs.length <= 0){
             //履歴が見つからなければ履歴保存
             var phone = new Phone();
             phone.phone_number = format_phone_number(req.param('From'));
             if(docs[0].mode == 'trial'){
               phone.status = 'trial';
+            }else{
+              //お試し以外は保存
+              phone.token = lottery_data.token;
+              phone.save();
             }
-            phone.token = lottery_data.token;
-            phone.save();
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             if(phone.status == 'trial'){
@@ -460,9 +476,18 @@ app.post('/twilio', function(req, res){
             }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
-            console.log(p_docs);
             for(var k = 0, l = p_docs.length; k < l; k++){
-              p_docs[k].remove();
+              switch(p_docs[k].status){
+                case "won":
+                  //当選済みなのでキャンセルできない
+                  break;
+                case "calling":
+                  //通話中なのでキャンセルしないで
+                  break;
+                default:
+                  p_docs[k].remove();
+                  break;
+              }
             }
             speakErrorMessage(res, 'お申し込みをキャンセルしました');
           }
@@ -473,35 +498,48 @@ app.post('/twilio', function(req, res){
     speakErrorMessage(res, e);
   });
 });
-//通話がエラーになった
-app.post('/fallback', function(req, res){
 
-});
-//Twilio通話OK
-app.post('/status', function(req, res){
+//応募者から受信した通話が異常終了した
+app.post('/incoming/fallback/:token', function(req, res){
 
 });
 
-app.get('/debug', function(req, res){
-  var message = "";
-  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
-  client.makeCall({
-    to: '+' + '818054694667',
-    from: '+' + '815031596333',
-    url: 'http://twilio-lottery.azurewebsites.net/deb'
-  }, function(err, call){
-    if(err){
-      message = "エラー";
-    }else{
-      message = 'ok';
-    }
-    res.json({message: message});
+//応募者から受信した通話が終了した
+app.post('/incoming/status/:token', function(req, res){
+
+});
+
+//システムから発信した通話がエラーになった
+app.post('/fallback/:token', function(req, res){
+  Phone.find({phone_number: req.param('To')}, function(err, docs){
+
   });
 });
+//システムから発信した通話が終了した
+app.post('/status/:token', function(req, res){
 
-app.post('/deb', function(req, res){
-  speakErrorMessage(res, "テストです");
 });
+
+//app.get('/debug', function(req, res){
+//  var message = "";
+//  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
+//  client.makeCall({
+//    to: '+' + '818054694667',
+//    from: '+' + '815031596333',
+//    url: 'http://twilio-lottery.azurewebsites.net/deb'
+//  }, function(err, call){
+//    if(err){
+//      message = "エラー";
+//    }else{
+//      message = 'ok';
+//    }
+//    res.json({message: message});
+//  });
+//});
+//
+//app.post('/deb', function(req, res){
+//  speakErrorMessage(res, "テストです");
+//});
 
 // Here we go!
 app.listen(process.env.PORT || 3000);

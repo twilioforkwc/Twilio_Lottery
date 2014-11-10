@@ -1,11 +1,30 @@
 <% extend 'layout' %>
-<h1><%= @title %></h1>
-<p><%= @title %>へようこそ</p>
-<p><%= @message %></p>
-<form action="/start" method="POST">
+	<ul class="progress">
+		<li class="current">ログイン</li>
+		<li>仮設定</li>
+		<li>抽選開始</li>
+	</ul>
+<form id="login_form" action="/start" method="POST">
   <input type="hidden" id="csrf" name="_csrf" value="<%= @csrf %>" />  
-  <input type="text" name="account_sid" placeholder="Account SID" /><br />
-  <input type="text" name="auth_token" placeholder="Auth Token" /><br />
-  <input type="submit" value="送信" />
+	<div id="wrapper">
+		<dl class="tableLayout">
+			<dt>SID</dt>
+			<dd>
+				<input type="text" name="account_sid" value="" class="sizeL">
+			</dd>
+			<dt>Token</dt>
+			<dd>
+				<input type="text" name="auth_token" value="" class="sizeL">
+			</dd>
+		</dl>
+		<ul class="submitArea">
+			<li>
+					<button type="button" id="login_button" class="red">ログイン</button>
+			</li>
+		</ul>
 </form>
-
+		<ul class="attention">
+			<li>このアプリの対応ブラウザーは、Internet Explorer 11 / Google Chrome / Mozilla Firefox / Safari 最新版です。</li>
+			<li>実施場所付近の電話設備によっては一度に大量の電話を発信できない可能性がございます。</li>
+		</ul>
+	</div>

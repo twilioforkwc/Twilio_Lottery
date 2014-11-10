@@ -1,4 +1,9 @@
 $(document).ready(function(){
+
+  $('#login_button').click(function(e){
+    $('#login_form').submit();
+  });
+
   function updateToken(callback){
     $.ajax({
       url: '/token',
@@ -28,6 +33,7 @@ $(document).ready(function(){
       }
       form_data.append('voice_text', $('#voice_text').val());
       form_data.append('phone_number', $('#phone_number').val());
+      form_data.append('sms_phone_number', $('#sms_phone_number').val());
       form_data.append('_csrf', $('#csrf').val());
       if($('#voice_file').val()){
         form_data.append('voice_file', file_data);
@@ -41,8 +47,9 @@ $(document).ready(function(){
         data: form_data,
         success: function(e){
           if(mode == 'trial'){
-            alert("success:" + e.message);
-            $('#debug').html(e.debug);
+            //alert("success:" + e.message);
+            $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
+            $('#submit_button').removeAttr('disabled');
           }else{
             location.href = e.url;
           }
