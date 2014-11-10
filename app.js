@@ -464,6 +464,15 @@ app.post('/twilio', function(req, res){
             }
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
+            //SMS送信
+            var client = new twilie.RestClient(lottery_data.account_sid, lottery_data.auth_token);
+            client.message.create({
+              body: req.protocol + "://" + req.hostname + "/l/" + lottery_data.token,
+              to: req.param('From'),
+              from: '+' + lottery_data.sms_phone_number
+            }, function(err, message){
+              console.log(message);
+            });
             if(phone.status == 'trial'){
               if(lottery_data.voice_file){
                 sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
