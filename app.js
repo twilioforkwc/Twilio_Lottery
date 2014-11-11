@@ -145,7 +145,7 @@ console.log(auth_token);
      }
      callback(err, null); 
     }else{
-      var number = data.data.incomingPhoneNumbers[0];
+      var number = data.incomingPhoneNumbers[0];
       client.incomingPhoneNumbers(number.sid).update({
         voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
       }, function(err, num){
