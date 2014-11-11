@@ -145,14 +145,12 @@ console.log(auth_token);
      }
      callback(err, null); 
     }else{
-      data.incomingPhoneNumbers.forEach(function(number) {
-          console.log(number.sid);
-          client.incomingPhoneNumbers(number.sid).update({
-            voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
-          }, function(err, num){
-            console.log(num);
-            callback(err, num);
-          });
+      var number = data.data.incomingPhoneNumbers[0];
+      client.incomingPhoneNumbers(number.sid).update({
+        voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
+      }, function(err, num){
+        console.log(num);
+        callback(err, num);
       });
     }
   });

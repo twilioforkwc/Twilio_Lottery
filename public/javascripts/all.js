@@ -95,7 +95,7 @@ $(document).ready(function(){
         if(e.success === false){
           alert(e.message);
         }else{
-          winner_timer = setInterval(function(){
+          winner_timer = setInterval(updateToken(function(){
             $.ajax({
               url: '/s/' + $('#token').html(),
               error: function(e){console.log(e);},
@@ -135,7 +135,7 @@ $(document).ready(function(){
                } 
               }
             });
-          }, 3000);
+          }), 3000);
         }
       }
     });
