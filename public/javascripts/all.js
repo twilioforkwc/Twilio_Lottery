@@ -119,8 +119,7 @@ $(document).ready(function(){
                   postfix = '';
                   break;
                 }
-//             $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
-              $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ + postfix + '</ul></td></tr>');
+              $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
             } 
           }
         }
