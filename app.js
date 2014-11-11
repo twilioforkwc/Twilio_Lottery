@@ -170,7 +170,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
     if(err){
       res.json({success: false, message: 'データを保存できませんでした'});
     }else{
-      updateVoiceUrl(req, format_phone_number, sid, auth_token, function(err, num){
+      updateVoiceUrl(req, format_phone_number(number), sid, auth_token, function(err, num){
         if(err){
           res.json({success: false, message: err.message});
         }else{
