@@ -517,11 +517,12 @@ app.post('/twilio', function(req, res){
             }
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
-            //SMS送信
-            var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
-            var body = "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。";
-            sendSMS(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
             if(phone.status == 'trial'){
+              //SMS送信
+              var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
+              var body = "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。";
+              sendSMS(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
+
               if(lottery_data.voice_file){
                 sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/'), {loop: 3}));
               }else{
@@ -530,6 +531,7 @@ app.post('/twilio', function(req, res){
               }
             }else{
               speakErrorMessage(res, 'お申し込みを受け付けました');
+              //SMS送信
               sendSMS(lottery_data.account_sid, lottery_data.auth_token, "抽選登録が終了いたしました。抽選開始までしばらくお待ちください。",  lottery_data.sms_phone_number, req.param('From'));
             }
           }else{
