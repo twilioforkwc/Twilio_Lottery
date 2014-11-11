@@ -134,6 +134,9 @@ app.get('/start', function(req, res){
 });
 
 function updateVoiceUrl(req, to, sid, auth_token){
+console.log(to);
+console.log(sid);
+console.log(auth_token);
   var client = new twilio.RestClient(sid, auth_token);
   client.incomingPhoneNumbers.list({ phoneNumber: '+' + to }, function(err, data) {
     data.numbers.forEach(function(number) {
