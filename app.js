@@ -139,13 +139,13 @@ console.log(sid);
 console.log(auth_token);
   var client = new twilio.RestClient(sid, auth_token);
   client.incomingPhoneNumbers.list({ phoneNumber: to }, function(err, data) {
-    if(err || !data.numbers){
+    if(err || !data.incomingPhoneNumbers){
      if(!err){
       err = {message: "data is null("+to+")"}; 
      }
      callback(err, null); 
     }else{
-      data.numbers.forEach(function(number) {
+      data.incomingPhoneNumbers.forEach(function(number) {
           console.log(number.Sid);
           client.incomingPhoneNumbers(number.Sid).update({
             voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
@@ -272,6 +272,21 @@ app.get('/l/:token', function(req, res){
     }else{
       message = "";
     }
+//TODO
+//var client = new twilio.RestClient(docs[0].account_sid, docs[0].auth_token);
+//client.incomingPhoneNumbers.list({ phoneNumber: '+815031596448' }, function(err, data) {
+//  if(err || !data.incomingPhoneNumbers){
+//    if(!err){
+//      err = {message: "data is null(+815031596448)"}; 
+//    }
+//    console.log(data);
+//    console.log(err);
+//  }else{
+//    console.log(data.incomingPhoneNumbers);
+//  }
+//});
+//
+//
     getCandidateCount({token: docs[0].token}, function(num){
       res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken()});  
     });
