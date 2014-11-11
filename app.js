@@ -517,15 +517,9 @@ app.post('/twilio', function(req, res){
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             //SMS送信
-            var client = new twilio.RestClient(lottery_data.account_sid, lottery_data.auth_token);
             var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
-            client.messages.create({
-              body: "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。",
-              to: req.param('From'),
-              from: '+' + lottery_data.sms_phone_number
-            }, function(err, message){
-              console.log(message);
-            });
+            var body = "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。";
+            sendSMS(lottery.account_sid, lottery.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
             if(phone.status == 'trial'){
               if(lottery_data.voice_file){
                 sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/'), {loop: 3}));
@@ -535,23 +529,25 @@ app.post('/twilio', function(req, res){
               }
             }else{
               speakErrorMessage(res, 'お申し込みを受け付けました');
+              sendSMS(lottery.account_sid, lottery.auth_token, "抽選登録が終了いたしました。抽選開始までしばらくお待ちください。",  lottery_data.sms_phone_number, req.param('From'));
             }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             for(var k = 0, l = p_docs.length; k < l; k++){
-              switch(p_docs[k].status){
-                case "won":
-                  //当選済みなのでキャンセルできない
-                  break;
-                case "calling":
-                  //通話中なのでキャンセルしないで
-                  break;
-                default:
+              //switch(p_docs[k].status){
+              //  case "won":
+              //    //当選済みなのでキャンセルできない
+              //    break;
+              //  case "calling":
+              //    //通話中なのでキャンセルしないで
+              //    break;
+              //  default:
                   p_docs[k].remove();
-                  break;
-              }
+              //    break;
+              //}
             }
             speakErrorMessage(res, 'お申し込みをキャンセルしました');
+            sendSMS(lottery.account_sid, lottery.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
           }
         });
       }
@@ -560,6 +556,17 @@ app.post('/twilio', function(req, res){
     speakErrorMessage(res, e);
   });
 });
+
+function sendSMS(sid, token, body, from, to){
+  var client = new twilio.RestClient(sid, token);
+  client.messages.create({
+    body: body,
+    to: to,
+    from: '+' + from
+  }, function(err, message){
+    console.log(message);
+  });
+}
 
 //応募者から受信した通話が異常終了した
 app.post('/incoming/fallback/:token', function(req, res){
