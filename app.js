@@ -420,7 +420,7 @@ app.get('/s/:token', function(req, res){
     for(var i = 0, l = docs.length; i < l; i++){
       data.push({status: docs[i].status, phone_number: docs[i].phone_number});
     }
-    res.json(data);
+    res.json({data: data});
   });
 });
 
