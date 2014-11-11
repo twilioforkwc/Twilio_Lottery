@@ -204,7 +204,8 @@ app.post('/number', function(req, res){
     return Math.random().toString(36).substr(2);
   }
   function generate(){
-    var token = random() + random();
+    //var token = random() + random();
+    var token = random();
     Lottery.where({token: generated_token}).count(function(err, count){
       if(!err && count > 0){
         generate();
