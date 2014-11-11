@@ -415,7 +415,7 @@ app.post('/call/:token', function(req, res){
 
 //Ajaxで当選者情報を受け取る
 app.get('/s/:token', function(req, res){
-  Phone.where('token', req.param('token')).where('status', 'calling').where('status', 'won').where('status', error).exec(function(err, docs){
+  Phone.where('token', req.param('token')).where('status', 'calling').where('status', 'won').where('status', 'error').exec(function(err, docs){
     var data = [];
     for(var i = 0, l = docs.length; i < l; i++){
       data.push({status: docs[i].status, phone_number: docs[i].phone_number});

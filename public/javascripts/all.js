@@ -98,6 +98,7 @@ $(document).ready(function(){
           winner_timer = setInterval(updateToken(function(){
             $.ajax({
               url: '/s/' + $('#token').html(),
+              method: 'GET',
               error: function(e){console.log(e);},
               success: function(e){
                $('#table').html("");
