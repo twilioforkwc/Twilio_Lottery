@@ -511,7 +511,7 @@ app.post('/twilio', function(req, res){
             //指定された方法で返信を開始
             var resp = new twilio.TwimlResponse();
             //SMS送信
-            var client = new twilie.RestClient(lottery_data.account_sid, lottery_data.auth_token);
+            var client = new twilio.RestClient(lottery_data.account_sid, lottery_data.auth_token);
             client.message.create({
 //  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
               body: req.protocol + "://" + req.hostname + "/l/" + lottery_data.token,
