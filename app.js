@@ -138,7 +138,7 @@ console.log(to);
 console.log(sid);
 console.log(auth_token);
   var client = new twilio.RestClient(sid, auth_token);
-  client.incomingPhoneNumbers.list({ phoneNumber: '+' + to }, function(err, data) {
+  client.incomingPhoneNumbers.list({ phoneNumber: '*' + to }, function(err, data) {
     if(err || !data.numbers){
      if(!err){
       err = {message: "data is null("+to+")"}; 
