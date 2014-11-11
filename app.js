@@ -367,6 +367,7 @@ app.post('/select', function(req, res){
                   }
                 }
               });
+              res.json({success: true, message: "当選者に電話しています。しばらくお待ち下さい。"});
             }
           }
         });
