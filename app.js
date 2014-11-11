@@ -139,15 +139,19 @@ console.log(sid);
 console.log(auth_token);
   var client = new twilio.RestClient(sid, auth_token);
   client.incomingPhoneNumbers.list({ phoneNumber: '+' + to }, function(err, data) {
-    data.numbers.forEach(function(number) {
-        console.log(number.Sid);
-        client.incomingPhoneNumbers(number.Sid).update({
-          voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
-        }, function(err, num){
-          console.log(num);
-          callback(err, num);
-        });
-    });
+    if(err){
+     callback(err, num); 
+    }else{
+      data.numbers.forEach(function(number) {
+          console.log(number.Sid);
+          client.incomingPhoneNumbers(number.Sid).update({
+            voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
+          }, function(err, num){
+            console.log(num);
+            callback(err, num);
+          });
+      });
+    }
   });
 }
 
