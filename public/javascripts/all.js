@@ -26,6 +26,7 @@ $(document).ready(function(){
   function submitLottery(arg){
     var mode = arg;
     updateToken(function(elem){
+      $('#message_area').html('');
       var form_data = new FormData();
       var file_data = $('#voice_file').prop('files')[0];
       if(mode == 'trial'){
@@ -46,12 +47,16 @@ $(document).ready(function(){
         method: 'POST',
         data: form_data,
         success: function(e){
-          if(mode == 'trial'){
-            //alert("success:" + e.message);
-            $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
-            $('#submit_button').removeAttr('disabled');
+          if(e.error){
+            alert(e.message);
           }else{
-            location.href = e.url;
+            if(mode == 'trial'){
+              //alert("success:" + e.message);
+              $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
+              $('#submit_button').removeAttr('disabled');
+            }else{
+              location.href = e.url;
+            }
           }
         },
         error: function(e){alert('エラーが発生しました');}

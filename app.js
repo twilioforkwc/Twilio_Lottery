@@ -476,7 +476,7 @@ function validateToken(req, res, sid, to, callback, error){
 function speakErrorMessage(res, message){
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(resp.say(message, {language: 'ja-jp'}).toString());
+  res.end(resp.say(message, {language: 'ja-jp'}).toString(), {loop: 3});
 }
 function sendXml(res, resp){
   res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -521,7 +521,7 @@ app.post('/twilio', function(req, res){
             });
             if(phone.status == 'trial'){
               if(lottery_data.voice_file){
-                sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+                sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/'), {loop: 3}));
               }else{
                 speakErrorMessage(res, lottery_data.voice_text);
                 //sendXml(res, resp.say(lottery_data.voice_text));
