@@ -60,6 +60,7 @@ $(document).ready(function(){
   }
 
   if($('#candidates').length > 0){
+    getWinners();
     setInterval(function(e){
       $.ajax({
         url: '/candidates?id=' + $('#token').html(),
@@ -80,6 +81,53 @@ $(document).ready(function(){
 
   var winner_timer;
 
+  function getWinners(){
+    winner_timer = setInterval(updateToken(function(){
+      $.ajax({
+        url: '/s/' + $('#token').html(),
+        method: 'GET',
+        error: function(e){console.log(e);},
+        success: function(e){
+          if(e.data){
+            $('#table').html("");
+            for(var i = 0, l = e.data.length; i < l; i++){
+              var status, postfix, className;
+              switch(e.data[i].status){
+                case "calling":
+                  status = '発信中';
+                  postfix = '';
+                  className = 'calling';
+                  break;
+                case "online":
+                  status = '通話中';
+                  postfix = '';
+                  className = 'calling';
+                  break;
+                case "error":
+                  status = 'エラー';
+                  className = 'end';
+                  postfix = '';
+                  break;
+                case "won":
+                  status = '通話終了';
+                  className = 'end';
+                  postfix = '<li class="winner">当選</li>';
+                  break;
+                default:
+                  status = '待機中';
+                  className = 'calling';
+                  postfix = '';
+                  break;
+                }
+//             $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
+              $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ + postfix + '</ul></td></tr>');
+            } 
+          }
+        }
+      });
+    }), 3000);
+  }
+
   $('#select_winners_button').click(function(){
     updateToken(startSelection);
     return false;
@@ -94,51 +142,6 @@ $(document).ready(function(){
       success: function(e){
         if(e.success === false){
           alert(e.message);
-        }else{
-          winner_timer = setInterval(updateToken(function(){
-            $.ajax({
-              url: '/s/' + $('#token').html(),
-              method: 'GET',
-              error: function(e){console.log(e);},
-              success: function(e){
-                if(e.data){
-                  $('#table').html("");
-                  for(var i = 0, l = e.data.length; i < l; i++){
-                    var status, postfix, className;
-                    switch(e.data[i].status){
-                      case "calling":
-                        status = '発信中';
-                        postfix = '';
-                        className = 'calling';
-                        break;
-                      case "online":
-                        status = '通話中';
-                        postfix = '';
-                        className = 'calling';
-                        break;
-                      case "error":
-                        status = 'エラー';
-                        className = 'end';
-                        postfix = '';
-                        break;
-                      case "won":
-                        status = '通話終了';
-                        className = 'end';
-                        postfix = '<li class="winner">当選</li>';
-                        break;
-                      default:
-                        status = '待機中';
-                        className = 'calling';
-                        postfix = '';
-                        break;
-                      }
-//                   $('#table').append('<tr><td>'+e.data[i].phone_number.substr(-4)+'</td><td>'+status+'</td></tr>');
-                    $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ + postfix + '</ul></td></tr>');
-                  } 
-                }
-              }
-            });
-          }), 3000);
         }
       }
     });
