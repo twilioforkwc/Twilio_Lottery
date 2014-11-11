@@ -133,6 +133,20 @@ app.get('/start', function(req, res){
   });
 });
 
+function updateVoiceUrl(lottery){
+  var client = new twilio.RestClient(lottery.account_sid, lottery.auth_token);
+  client.incomingPhoneNumbers.list({ phoneNumber: '+' + lottery.phone_number }, function(err, data) {
+    data.numbers.forEach(function(number) {
+        console.log(number.Sid);
+        client.incomingPhoneNumbers(number.Sid).update({
+          voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
+        }, function(err, num){
+          console.log(num);
+        });
+    });
+  });
+}
+
 function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, file_path, mode){
   var lottery = new Lottery();
   lottery.account_sid = sid;
@@ -148,6 +162,7 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
     if(err){
       res.json({success: false, message: 'データを保存できませんでした'});
     }else{
+      updateVoiceUrl(lottery);
       switch(mode){
         case "trial":
           res.json({success: true, message: number + 'に電話をかけてください', debug: lottery});
@@ -467,6 +482,7 @@ app.post('/twilio', function(req, res){
             //SMS送信
             var client = new twilie.RestClient(lottery_data.account_sid, lottery_data.auth_token);
             client.message.create({
+//  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
               body: req.protocol + "://" + req.hostname + "/l/" + lottery_data.token,
               to: req.param('From'),
               from: '+' + lottery_data.sms_phone_number
