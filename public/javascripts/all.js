@@ -98,6 +98,7 @@ $(document).ready(function(){
           winner_timer = setInterval(function(){
             $.ajax({
               url: '/s/' + $('#token').html(),
+              error: function(e){console.log(e);},
               success: function(e){
                $('#table').html("");
                for(var i = 0, l = e.data.length; i < l; i++){
@@ -134,7 +135,7 @@ $(document).ready(function(){
                } 
               }
             });
-          }, 3000);
+          });
         }
       }
     });
