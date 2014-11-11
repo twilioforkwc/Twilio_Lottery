@@ -511,9 +511,9 @@ app.post('/twilio', function(req, res){
             var resp = new twilio.TwimlResponse();
             //SMS送信
             var client = new twilio.RestClient(lottery_data.account_sid, lottery_data.auth_token);
+            var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
             client.messages.create({
-//  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
-              body: req.protocol + "://" + req.hostname + "/l/" + lottery_data.token,
+              body: "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。",
               to: req.param('From'),
               from: '+' + lottery_data.sms_phone_number
             }, function(err, message){
