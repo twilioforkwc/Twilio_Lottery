@@ -483,7 +483,7 @@ function validateToken(req, res, sid, to, callback, error){
 function speakErrorMessage(res, message){
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(resp.say(message, {language: 'ja-jp'}).toString(), {loop: 3});
+  res.end(resp.say(message, {language: 'ja-jp', loop: 3}).toString());
 }
 function sendXml(res, resp){
   res.writeHead(200, {'Content-Type': 'text/xml'});
