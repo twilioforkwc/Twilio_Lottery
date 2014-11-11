@@ -133,7 +133,7 @@ app.get('/start', function(req, res){
   });
 });
 
-function updateVoiceUrl(req, to, sid, auth_token){
+function updateVoiceUrl(req, to, sid, auth_token, callback){
 console.log(to);
 console.log(sid);
 console.log(auth_token);
@@ -145,6 +145,7 @@ console.log(auth_token);
           voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
         }, function(err, num){
           console.log(num);
+          callback(err, num);
         });
     });
   });
@@ -165,15 +166,20 @@ function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voi
     if(err){
       res.json({success: false, message: 'データを保存できませんでした'});
     }else{
-      updateVoiceUrl(req, format_phone_number, sid, auth_token);
-      switch(mode){
-        case "trial":
-          res.json({success: true, message: number + 'に電話をかけてください', debug: lottery});
-          break;
-        default:
-          res.json({success: true, message: number + 'に電話をかけてください', url: '/l/' + generated_token});
-          break;
-      }
+      updateVoiceUrl(req, format_phone_number, sid, auth_token, function(err, num){
+        if(err){
+          res.json({success: false, message: err.message});
+        }else{
+          switch(mode){
+            case "trial":
+              res.json({success: true, message: number + 'に電話をかけてください', debug: lottery});
+              break;
+            default:
+              res.json({success: true, message: number + 'に電話をかけてください', url: '/l/' + generated_token});
+              break;
+          }
+        }
+      });
     }
   });
 }
