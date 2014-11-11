@@ -415,12 +415,19 @@ app.post('/call/:token', function(req, res){
 
 //Ajaxで当選者情報を受け取る
 app.get('/s/:token', function(req, res){
-  Phone.where('token', req.param('token')).where({status: {'$ne': null}}).exec(function(err, docs){
-    var data = [];
-    for(var i = 0, l = docs.length; i < l; i++){
-      data.push({status: docs[i].status, phone_number: docs[i].phone_number});
+  Lottery.find({token: req.param('token')}, function(err, lotteries){
+    if(!err){
+      var lottery = lotteries[0];
+      Phone.where('token', req.param('token')).where({status: {'$ne': null}}).exec(function(err, docs){
+        var data = [];
+        for(var i = 0, l = docs.length; i < l; i++){
+          data.push({status: docs[i].status, phone_number: docs[i].phone_number});
+        }
+        res.json({data: data, lottery: lottery});
+      });
+    }else{
+      res.json({data: [], lottery: null});
     }
-    res.json({data: data});
   });
 });
 

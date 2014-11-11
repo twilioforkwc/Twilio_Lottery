@@ -93,6 +93,14 @@ $(document).ready(function(){
         method: 'GET',
         error: function(e){console.log(e);},
         success: function(e){
+          if(e.lottery){
+            switch(e.action_status){
+              case "calling":
+                break;
+              default:
+                break;
+            }
+          }
           if(e.data){
             $('#table').html("");
             for(var i = 0, l = e.data.length; i < l; i++){
