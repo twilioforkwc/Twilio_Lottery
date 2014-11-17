@@ -257,7 +257,7 @@ app.post('/select', function(req, res){
             res.json({success: false, message: "データベースにエラーが発生しました"});
           }else{
             if(docs.length <= 0){
-              res.json({success: false, message: "応募者が見つかりませんでした" + JSON.stringify(req.param('no_dup'))});
+              res.json({success: false, message: "応募者が見つかりませんでした"});
             }else if(docs.length < num){
               res.json({success: false, message: "応募者数が当選者数より少ないため実行できません"});
             }else{
