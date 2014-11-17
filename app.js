@@ -249,7 +249,7 @@ app.post('/select', function(req, res){
         res.json({success: false, message: '当選者数を1以上の数値で指定してください'});  
       }else{
         var args = {token: req.param('token')};
-        if(!req.param('no_dup') || req.param('no_dup') == undefined){
+        if(req.param('no_dup')){
           args.status = {'$ne': 'won'};
         }
         Phone.find(args, function(err, docs){
