@@ -124,9 +124,9 @@ $(document).ready(function(){
                 className = 'end';
                 if(e.data[i].callstatus == 'completed'){
                   postfix = '<li class="winner">通知済</li>';
+                  finished += 1;
                 }else{
                   postfix = '<li class="winner">当選</li>';
-                  finished += 1;
                 }
                 break;
               default:
