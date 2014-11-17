@@ -137,6 +137,7 @@ $(document).ready(function(){
               }
             $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
           } 
+alert(finished);
           $('#finished').html(finished);
         }
       }
