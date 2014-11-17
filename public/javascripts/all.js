@@ -163,12 +163,14 @@ $(document).ready(function(){
   $('#destroy').click(function(){
     if(confirm("抽選を終了しますか？この操作は取り消しできません")){
       console.log('destroy');  
-      $.ajax({
-        url: '/destroy/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
-        method: 'POST',
-        success: function(e){
-          window.location.href="/";
-        }
+      updateToken(function(){
+        $.ajax({
+          url: '/destroy/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
+          method: 'POST',
+          success: function(e){
+            window.location.href="/";
+          }
+        });
       });
     }
   });

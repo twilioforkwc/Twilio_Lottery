@@ -10,7 +10,20 @@ var twilio = require('twilio');
 var csrf = require('csurf');
 var path = require('path');
 var fs = require('fs-extra');
+var Lottery = require(__dirname + '/models/lottery');
+var Phone = require(__dirname + '/models/phone');
+var display_phone_number = require(__dirname + '/common/display_phone_number');
+var update_voice_url = require(__dirname + '/common/update_voice_url');
+var save_and_redirect = require(__dirname + '/common/save_and_redirect');
+var format_phone_number = require(__dirname + '/common/format_phone_number');
+var get_candidate_count = require(__dirname + '/common/get_candidate_count');
+var shuffle = require(__dirname + '/common/shuffle');
+var phone_call = require(__dirname + '/common/phone_call');
+var speak_error_message = require(__dirname + '/common/speak_error_message');
+var send_xml = require(__dirname + '/common/send_xml');
+var send_sms = require(__dirname + '/common/send_sms');
 
+/* configuration */
 var app = express();
 
 // Cookie
@@ -43,10 +56,6 @@ app.engine('ect', ECT({ watch: true, root: __dirname + '/views', ext: '.ect' }).
 app.set('view engine', 'ect');
 app.use(express['static'](__dirname + '/public'));
 
-// Model
-var Lottery = require(__dirname + '/models/lottery');
-var Phone = require(__dirname + '/models/phone');
-
 // Logs
 if (app.get('env') == 'production') {
   app.use(morgan("dev", {}));
@@ -63,7 +72,9 @@ app.use(multer({
   dest: "./public/files/"
 }));
 
-// Application
+/* configuration */
+
+/* Application */
 //Auth TokenやAccoutn SIDを入力するトップページ
 app.get('/', function (req, res) {
   res.render('index', { title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: "" });
@@ -103,12 +114,6 @@ app.post('/start', function(req, res){
   }
 });
 
-function display_phone_number(number){
-  return number.replace(/\+81/, '0').replace(/^0120/, '0120-').replace(/0120-([\d][\d][\d])([\d][\d][\d])/, function(str, p1, p2, offset, s){return '0120-' + p1 + '-' + p2;}).replace(/^050/, '050-').replace(/050-([\d][\d][\d][\d])([\d][\d][\d][\d])$/, function(str, p1, p2, offset, s){
-    return '050-' + p1 + "-" +  p2;
-  });
-}
-
 app.get('/start', function(req, res){
   //アップグレードアカウントなら利用可能な電話番号リストを作成
   var option_data = [];
@@ -133,61 +138,6 @@ app.get('/start', function(req, res){
   });
 });
 
-function updateVoiceUrl(req, to, sid, auth_token, callback){
-console.log(to);
-console.log(sid);
-console.log(auth_token);
-  var client = new twilio.RestClient(sid, auth_token);
-  client.incomingPhoneNumbers.list({ phoneNumber: to }, function(err, data) {
-    if(err || !data.incomingPhoneNumbers){
-     if(!err){
-      err = {message: "data is null("+to+")"}; 
-     }
-     callback(err, null); 
-    }else{
-      var number = data.incomingPhoneNumbers[0];
-      client.incomingPhoneNumbers(number.sid).update({
-        voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
-      }, function(err, num){
-        console.log(num);
-        callback(err, num);
-      });
-    }
-  });
-}
-
-function saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, file_path, mode){
-  var lottery = new Lottery();
-  lottery.account_sid = sid;
-  lottery.auth_token = auth_token;
-  lottery.createdAt = new Date();
-  lottery.phone_number = format_phone_number(number);
-  lottery.sms_phone_number = format_phone_number(req.param('sms_phone_number'));
-  lottery.token = generated_token;
-  lottery.voice_file = file_path;
-  lottery.voice_text = voice_text;
-  lottery.mode = mode;
-  lottery.save(function(err){
-    if(err){
-      res.json({success: false, message: 'データを保存できませんでした'});
-    }else{
-      updateVoiceUrl(req, number, sid, auth_token, function(err, num){
-        if(err){
-          res.json({success: false, message: err.message});
-        }else{
-          switch(mode){
-            case "trial":
-              res.json({success: true, message: display_phone_number(number) + 'に電話をかけてください', debug: lottery});
-              break;
-            default:
-              res.json({success: true, message: display_phone_number(number) + 'に電話をかけてください', url: '/l/' + generated_token});
-              break;
-          }
-        }
-      });
-    }
-  });
-}
 
 //選択された電話番号から電話番号別抽選ページを作成してリダイレクト
 //modeがtrialの場合はJSONを返す
@@ -218,13 +168,13 @@ app.post('/number', function(req, res){
         if(req.files.voice_file){
           fs.exists(req.files.voice_file.path, function(exists){
             if(exists){
-              saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
+              save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
             }else{
-              saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
+              save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
             }
           });
         }else{
-            saveAndRedirect(req, res, sid, auth_token, number, generated_token, voice_text, null, mode);
+            save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, null, mode);
         }
       }
     });
@@ -271,64 +221,25 @@ app.get('/l/:token', function(req, res){
     }else{
       message = "";
     }
-//TODO
-//var client = new twilio.RestClient(docs[0].account_sid, docs[0].auth_token);
-//client.incomingPhoneNumbers.list({ phoneNumber: '+815031596448' }, function(err, data) {
-//  if(err || !data.incomingPhoneNumbers){
-//    if(!err){
-//      err = {message: "data is null(+815031596448)"}; 
-//    }
-//    console.log(data);
-//    console.log(err);
-//  }else{
-//    console.log(data.incomingPhoneNumbers);
-//  }
-//});
-//
-//
-    getCandidateCount({token: docs[0].token}, function(num){
+    get_candidate_count({token: docs[0].token}, function(num){
       res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken()});  
     });
   });
 });
 
-function getCandidateCount(args, callback){
-  var num = 0;
-  Phone.where(args).count(function(err, count){
-    if(count){
-      num = count;
-    }
-    callback(num);
-  });
-}
-function getCandidates(args, callback){
-  Phone.find(args, callback);
-}
-
 // 応募者数
 app.get('/candidates', function(req, res){
-  getCandidateCount({token: req.param('id')}, function(num){
+  get_candidate_count({token: req.param('id')}, function(num){
     res.json({num: num});
   });
 });
 //当選者数
 app.get('/winners', function(req, res){
-  getCandidateCount({status: 'won', token: req.param('id')}, function(num){
+  get_candidate_count({status: 'won', token: req.param('id')}, function(num){
     res.json({num: num});
   });
 });
 
-function shuffle(array) {
-  var counter = array.length, temp, index;
-  while (counter > 0) {
-      index = Math.floor(Math.random() * counter);
-      counter--;
-      temp = array[counter];
-      array[counter] = array[index];
-      array[index] = temp;
-  }
-  return array;
-}
 //当選実行
 app.post('/select', function(req, res){
   Lottery.find({token: req.param('token')}, function(err, lotteries){
@@ -338,9 +249,7 @@ app.post('/select', function(req, res){
         res.json({success: false, message: '当選者数を1以上の数値で指定してください'});  
       }else{
         var args = {token: req.param('token')};
-        if(req.param('no_dup')){
-          args.status = null;
-        }else{
+        if(!req.param('no_dup')){
           args.status = {'$ne': 'won'};
         }
         Phone.find(args, function(err, docs){
@@ -362,7 +271,7 @@ app.post('/select', function(req, res){
                   var max = req.param('num');
                   for(var i = 0, len = data.length; i < max; i++){
                     data[i].status = 'calling';
-                    phoneCall(req, {data: data[i], lottery: lotteries[0]});
+                    phone_call(req, {data: data[i], lottery: lotteries[0]});
                   }
                 }
               });
@@ -378,36 +287,19 @@ app.post('/select', function(req, res){
 });
 
 // 当選者に電話をかける
-function phoneCall(req, args){
-  var client = new twilio.RestClient(args.lottery.account_sid, args.lottery.auth_token);
-  client.makeCall({
-    to: '+' + args.data.phone_number,
-    from: '+' + args.lottery.phone_number,
-    url: req.protocol + "://" + req.hostname + '/call/' + args.lottery.token,
-    fallbackUrl: req.protocol + "://" + req.hostname + '/fallback/' + args.lottery.token,
-    statusCallback: req.protocol + "://" + req.hostname + '/status/' + args.lottery.token
-  }, function(err, call){
-    if(err){
-      args.data.status = 'error';
-    }else{
-      args.data.status = 'won';
-    }
-    args.data.save();
-  });
-}
 
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();
   validateToken(req, res, req.param('AccountSid'), req.param('To'), function(e){
     Lottery.find({token: req.param('token')}, function(err, docs){
       if(err){
-        speakErrorMessage(res, "エラーが発生しました。通話を終了します");
+        speak_error_message(res, "エラーが発生しました。通話を終了します");
       }else{
         var l = docs[0];
         if(l.voice_file){
-          sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + l.voice_file.replace(/public/, '').replace(/\\/g, '/')));
+          send_xml(res, resp.play(req.protocol + "://" + req.hostname + "" + l.voice_file.replace(/public/, '').replace(/\\/g, '/')));
         }else{
-          speakErrorMessage(res, l.voice_text);
+          speak_error_message(res, l.voice_text);
         }
       }
     });
@@ -453,21 +345,12 @@ app.post('/destroy/:token', function(req, res){
   res.json({success: true});
 });
 
-function format_phone_number(number){
-  var num;
-  if(number){
-    num = number.replace(/[^\d]/g, '');
-  }else{
-    num = "";
-  }
-  return num;
-}
 //Twilioからのリクエストかチェック
 function validateToken(req, res, sid, to, callback, error){
   //callback();
   //Lottery.find({phone_number: format_phone_number(to)}, function(err, docs){
   //  if(err || docs.length <= 0){
-  //    speakErrorMessage(res, "指定された番号("+format_phone_number(to)+")が見つかりませんでした");
+  //    speak_error_message(res, "指定された番号("+format_phone_number(to)+")が見つかりませんでした");
   //  }else{
   //    var doc = docs[0];
       callback();
@@ -481,25 +364,16 @@ function validateToken(req, res, sid, to, callback, error){
 }
 
 //Twilioでエラーメッセージを話す
-function speakErrorMessage(res, message){
-  var resp = new twilio.TwimlResponse();
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(resp.say(message, {language: 'ja-jp', loop: 3}).toString());
-}
-function sendXml(res, resp){
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(resp.toString());
-}
 
 //着電するとTwilioから呼び出される
 app.post('/twilio', function(req, res){
-  //speakErrorMessage(res, "こんにちは");
+  //speak_error_message(res, "こんにちは");
   validateToken(req, res, req.param('AccountSid'), req.param('From'), function(e){
     //Toからアプリケーションとユーザを検索
     Lottery.find({phone_number: format_phone_number(req.param('To'))}, function(err, docs){
       if(err || docs.length <= 0){
         //見つからなかったらエラー処理
-        speakErrorMessage(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
+        speak_error_message(res, 'おかけになった電話番号は既に抽選が終了しているか、登録されていないためご利用できません');
       }else{
         //見つかったら通話履歴チェック
         var lottery_data = docs[0];
@@ -520,19 +394,19 @@ app.post('/twilio', function(req, res){
             if(phone.status == 'trial'){
               //SMS送信
               var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
-              var body = "抽選アプリのURLは"+ url +"です。画面を閉じてしまった時にご利用下さい。";
-              sendSMS(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
+              var body = "抽選アプリのURLは"+ url +" です。画面を閉じてしまった時にご利用下さい。";
+              send_sms(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
 
               if(lottery_data.voice_file){
-                sendXml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/'), {loop: 3}));
+                send_xml(res, resp.play(req.protocol + "://" + req.hostname + "" + lottery_data.voice_file.replace(/public/, '').replace(/\\/g, '/'), {loop: 3}));
               }else{
-                speakErrorMessage(res, lottery_data.voice_text);
-                //sendXml(res, resp.say(lottery_data.voice_text));
+                speak_error_message(res, lottery_data.voice_text);
+                //send_xml(res, resp.say(lottery_data.voice_text));
               }
             }else{
-              speakErrorMessage(res, 'お申し込みを受け付けました');
+              speak_error_message(res, 'お申し込みを受け付けました');
               //SMS送信
-              sendSMS(lottery_data.account_sid, lottery_data.auth_token, "抽選登録が終了いたしました。抽選開始までしばらくお待ちください。",  lottery_data.sms_phone_number, req.param('From'));
+              send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録が終了いたしました。抽選開始までしばらくお待ちください。",  lottery_data.sms_phone_number, req.param('From'));
             }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
@@ -549,27 +423,17 @@ app.post('/twilio', function(req, res){
               //    break;
               //}
             }
-            speakErrorMessage(res, 'お申し込みをキャンセルしました');
-            sendSMS(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+            speak_error_message(res, 'お申し込みをキャンセルしました');
+            send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
           }
         });
       }
     });
   }, function(e){
-    speakErrorMessage(res, e);
+    speak_error_message(res, e);
   });
 });
 
-function sendSMS(sid, token, body, from, to){
-  var client = new twilio.RestClient(sid, token);
-  client.messages.create({
-    body: body,
-    to: to,
-    from: '+' + from
-  }, function(err, message){
-    console.log(message);
-  });
-}
 
 //応募者から受信した通話が異常終了した
 app.post('/incoming/fallback/:token', function(req, res){
@@ -610,7 +474,7 @@ app.post('/status/:token', function(req, res){
 //});
 //
 //app.post('/deb', function(req, res){
-//  speakErrorMessage(res, "テストです");
+//  speak_error_message(res, "テストです");
 //});
 
 // Here we go!
