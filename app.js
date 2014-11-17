@@ -450,6 +450,7 @@ app.post('/fallback/:token', function(req, res){
   Phone.find({phone_number: format_phone_number(req.param('To')), token: req.param('token')}, function(err, docs){
     if(!err && docs.length > 0){
       docs[0].callstatus = req.param('CallStatus');
+      docs[0].status = 'error';
       docs[0].save();
     }
   });
