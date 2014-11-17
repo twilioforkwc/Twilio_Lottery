@@ -100,6 +100,7 @@ $(document).ready(function(){
         }
         if(e.data){
           $('#table').html("");
+          var finished = 0;
           for(var i = 0, l = e.data.length; i < l; i++){
             var status, postfix, className;
             switch(e.data[i].status){
@@ -121,7 +122,12 @@ $(document).ready(function(){
               case "won":
                 status = '通話終了';
                 className = 'end';
-                postfix = '<li class="winner">当選</li>';
+                if(e.data[i].callstatus == 'completed'){
+                  postfix = '<li class="winner">当選</li>';
+                }else{
+                  postfix = '<li class="winner">通知済</li>';
+                  finished += 1;
+                }
                 break;
               default:
                 status = '待機中';
@@ -131,6 +137,7 @@ $(document).ready(function(){
               }
             $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
           } 
+          $('#finished').html(finished);
         }
       }
     });
