@@ -84,60 +84,56 @@ $(document).ready(function(){
     }, 3000);
   }
 
-  var winner_timer;
-
   function getWinners(){
-    winner_timer = setInterval(updateToken(function(){
-      $.ajax({
-        url: '/s/' + $('#token').html(),
-        method: 'GET',
-        error: function(e){console.log(e);},
-        success: function(e){
-          if(e.lottery){
-            switch(e.action_status){
-              case "calling":
-                break;
-              default:
-                break;
-            }
-          }
-          if(e.data){
-            $('#table').html("");
-            for(var i = 0, l = e.data.length; i < l; i++){
-              var status, postfix, className;
-              switch(e.data[i].status){
-                case "calling":
-                  status = '発信中';
-                  postfix = '';
-                  className = 'calling';
-                  break;
-                case "online":
-                  status = '通話中';
-                  postfix = '';
-                  className = 'calling';
-                  break;
-                case "error":
-                  status = 'エラー';
-                  className = 'end';
-                  postfix = '';
-                  break;
-                case "won":
-                  status = '通話終了';
-                  className = 'end';
-                  postfix = '<li class="winner">当選</li>';
-                  break;
-                default:
-                  status = '待機中';
-                  className = 'calling';
-                  postfix = '';
-                  break;
-                }
-              $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
-            } 
+    $.ajax({
+      url: '/s/' + $('#token').html(),
+      method: 'GET',
+      error: function(e){console.log(e);},
+      success: function(e){
+        if(e.lottery){
+          switch(e.action_status){
+            case "calling":
+              break;
+            default:
+              break;
           }
         }
-      });
-    }), 3000);
+        if(e.data){
+          $('#table').html("");
+          for(var i = 0, l = e.data.length; i < l; i++){
+            var status, postfix, className;
+            switch(e.data[i].status){
+              case "calling":
+                status = '発信中';
+                postfix = '';
+                className = 'calling';
+                break;
+              case "online":
+                status = '通話中';
+                postfix = '';
+                className = 'calling';
+                break;
+              case "error":
+                status = 'エラー';
+                className = 'end';
+                postfix = '';
+                break;
+              case "won":
+                status = '通話終了';
+                className = 'end';
+                postfix = '<li class="winner">当選</li>';
+                break;
+              default:
+                status = '待機中';
+                className = 'calling';
+                postfix = '';
+                break;
+              }
+            $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
+          } 
+        }
+      }
+    });
   }
 
   $('#select_winners_button').click(function(){
