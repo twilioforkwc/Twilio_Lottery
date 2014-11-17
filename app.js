@@ -314,7 +314,7 @@ app.get('/s/:token', function(req, res){
       Phone.where('token', req.param('token')).where({status: {'$ne': null}}).exec(function(err, docs){
         var data = [];
         for(var i = 0, l = docs.length; i < l; i++){
-          data.push({status: docs[i].status, phone_number: docs[i].phone_number});
+          data.push({status: docs[i].status, phone_number: docs[i].phone_number, callstatus: docs[i].callstatus});
         }
         res.json({data: data, lottery: lottery});
       });
