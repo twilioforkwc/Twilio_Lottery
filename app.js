@@ -222,7 +222,7 @@ app.get('/l/:token', function(req, res){
       message = "";
     }
     get_candidate_count({token: docs[0].token}, function(num){
-      res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken()});  
+      res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});  
     });
   });
 });
@@ -447,13 +447,22 @@ app.post('/incoming/status/:token', function(req, res){
 
 //システムから発信した通話がエラーになった
 app.post('/fallback/:token', function(req, res){
-  Phone.find({phone_number: req.param('To')}, function(err, docs){
-
+  Phone.find({phone_number: req.param('To'), token: req.param('token')}, function(err, docs){
+    if(!err && docs.length > 0){
+      docs[0].callstatus = req.param('CallStatus');
+      docs[0].save();
+    }
   });
 });
+
 //システムから発信した通話が終了した
 app.post('/status/:token', function(req, res){
-
+  Phone.find({phone_number: req.param('To'), token: req.param('token')}, function(err, docs){
+    if(!err && docs.length > 0){
+      docs[0].callstatus = req.param('CallStatus');
+      docs[0].save();
+    }
+  });
 });
 
 //app.get('/debug', function(req, res){

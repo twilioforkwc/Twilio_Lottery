@@ -7,6 +7,7 @@ var PhoneSchema = new Schema({
   phone_number: { type: String },
   token: { type: String },
   status: { type: String },
+  callstatus: { type: String },
   createdAt: { type: Date, expires: expire + 's' }
 });
 
