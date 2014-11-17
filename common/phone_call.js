@@ -1,5 +1,5 @@
 var twilio = require('twilio');
-module.eports = function(req, args){
+module.exports = function(req, args){
   var client = new twilio.RestClient(args.lottery.account_sid, args.lottery.auth_token);
   client.makeCall({
     to: '+' + args.data.phone_number,
