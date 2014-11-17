@@ -123,9 +123,9 @@ $(document).ready(function(){
                 status = '通話終了';
                 className = 'end';
                 if(e.data[i].callstatus == 'completed'){
-                  postfix = '<li class="winner">当選</li>';
-                }else{
                   postfix = '<li class="winner">通知済</li>';
+                }else{
+                  postfix = '<li class="winner">当選</li>';
                   finished += 1;
                 }
                 break;
