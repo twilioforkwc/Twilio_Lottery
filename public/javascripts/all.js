@@ -65,8 +65,8 @@ $(document).ready(function(){
   }
 
   if($('#candidates').length > 0){
-    getWinners();
     setInterval(function(e){
+      getWinners();
       $.ajax({
         url: '/candidates?id=' + $('#token').html(),
         method: 'GET',
