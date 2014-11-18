@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var multer  = require('multer');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var ECT = require('ect');
 var twilio = require('twilio');
 var csrf = require('csurf');
@@ -31,9 +32,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
+// MongoDB
+var connectionString = process.env.CUSTOMCONNSTR_MONGOLAB_URI;
+mongoose.connect(connectionString);
+
 // Session
 app.use(session({
   secret: process.env.SESSION_SECRET || 'what do you plan to do?',
+  mongoose_connection: mongoose.connections[0],
   resave: false,
   saveUninitialized: false
 }));
@@ -63,10 +69,6 @@ if (app.get('env') == 'production') {
   app.use(morgan("dev", { format: 'dev', immediate: true }));
 }
 
-// MongoDB
-var connectionString = process.env.CUSTOMCONNSTR_MONGOLAB_URI;
-mongoose.connect(connectionString);
-
 // File upload
 app.use(multer({
   dest: "./public/files/"
@@ -75,6 +77,7 @@ app.use(multer({
 /* configuration */
 
 /* Application */
+
 //Auth TokenやAccoutn SIDを入力するトップページ
 app.get('/', function (req, res) {
   res.render('index', { title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: "" });
@@ -83,6 +86,7 @@ app.get('/', function (req, res) {
 //汎用エラーページ
 app.get('/error', function(req, res){
   res.render('error', {title: 'Twilio抽選アプリ', message: req.session.message});
+  req.session.message = null;
 });
 
 //電話番号を選択して利用開始するページ
@@ -218,12 +222,14 @@ app.get('/l/:token', function(req, res){
     var message;
     if(err){
       message = err.message;
+      get_candidate_count({token: docs[0].token}, function(num){
+        res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});  
+      });
     }else{
       message = "";
+      req.session.message = "指定された抽選は受付期間が終了しました。";
+      res.redirect('/error');
     }
-    get_candidate_count({token: docs[0].token}, function(num){
-      res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});  
-    });
   });
 });
 
@@ -287,7 +293,6 @@ app.post('/select', function(req, res){
 });
 
 // 当選者に電話をかける
-
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();
   validateToken(req, res, req.param('AccountSid'), req.param('To'), function(e){
@@ -465,27 +470,6 @@ app.post('/status/:token', function(req, res){
     }
   });
 });
-
-//app.get('/debug', function(req, res){
-//  var message = "";
-//  var client = new twilio.RestClient('AC9f7b0b7ee516c2fa051478118208b1fc', '7a7fb4c0a1dec149fa6ad09282c98bc6');
-//  client.makeCall({
-//    to: '+' + '818054694667',
-//    from: '+' + '815031596333',
-//    url: 'http://twilio-lottery.azurewebsites.net/deb'
-//  }, function(err, call){
-//    if(err){
-//      message = "エラー";
-//    }else{
-//      message = 'ok';
-//    }
-//    res.json({message: message});
-//  });
-//});
-//
-//app.post('/deb', function(req, res){
-//  speak_error_message(res, "テストです");
-//});
 
 // Here we go!
 app.listen(process.env.PORT || 3000);
