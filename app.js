@@ -155,7 +155,7 @@ app.post('/number', function(req, res){
   var generated_token;
 
   function random(){
-    return Math.random().toString(36).substr(2);
+    return Math.random().toString(18).substr(4);
   }
   function generate(){
     //var token = random() + random();
@@ -395,7 +395,7 @@ app.post('/twilio', function(req, res){
             var resp = new twilio.TwimlResponse();
             if(phone.status == 'trial'){
               //SMS送信
-              var url = req.protocol + "://" + req.hostname + "/l/" + lottery_data.token;
+              var url = req.hostname + "/l/" + lottery_data.token;
               var body = "抽選アプリのURLは"+ url +" です。画面を閉じてしまった時にご利用下さい。";
               send_sms(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
 
