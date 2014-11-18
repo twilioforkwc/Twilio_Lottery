@@ -222,7 +222,6 @@ app.get('/l/:token', function(req, res){
       req.session.message = "指定された抽選は受付期間が終了しました。";
       res.redirect('/error');
     }else{
-      message = err.message;
       get_candidate_count({token: docs[0].token}, function(num){
         res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});  
       });
