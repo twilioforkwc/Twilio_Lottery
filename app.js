@@ -264,7 +264,7 @@ app.post('/select', function(req, res){
               res.json({success: false, message: "応募者数が当選者数より少ないため実行できません"});
             }else{
               // 当選処理開始
-              lotteries[0].status = 'calling';
+              lotteries[0].action_status = 'calling';
               lotteries[0].call_session = lotteries[0].call_session + docs.length;
               lotteries[0].save(function(e){
                 if(e){

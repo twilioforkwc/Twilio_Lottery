@@ -101,7 +101,7 @@ $(document).ready(function(){
         if(e.lottery){
           if(e.lottery.call_session > 0){
             $('#call_status').html('<span class="calling">呼び出し中</span>');
-          }else if(e.lottery.satus == 'calling'){
+          }else if(e.lottery.action_status == 'calling'){
             $('#call_status').html('<span class="end">終了</span>');
           }
         }
