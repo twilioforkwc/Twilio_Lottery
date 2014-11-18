@@ -480,7 +480,7 @@ app.post('/status/:token', function(req, res){
 app.post('/stop/:token', function(req, res){
   Lottery.find({token: req.param('token')}, function(e, ls){
     if(!e){
-      var client = new twilio.RestClient(ls.account_sid, ls.auth_token);
+      var client = new twilio.RestClient(ls[0].account_sid, ls[0].auth_token);
       Phone.find({token: req.param('token')}, function(err, docs){
         if(!err){
           for(var i = 0, l = docs.length; i < l; i++){
