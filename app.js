@@ -215,7 +215,7 @@ app.get('/token', function(req, res){
 //電話番号別抽選ページ
 app.get('/l/:token', function(req, res){
   var lottery = new Lottery();
-  Lottery.find({token: req.params.token}, function(err, docs){
+  Lottery.find({token: req.param('token')}, function(err, docs){
     for(var i = 0, len = docs.length; i < len; i++){
       console.log(docs[i]);
     }
