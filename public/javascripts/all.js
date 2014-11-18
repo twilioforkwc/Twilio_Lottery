@@ -163,19 +163,26 @@ $(document).ready(function(){
     return false;
   }
 
+  function goodbye(){
+    window.location.href="/";
+  }
+
   $('#destroy').click(function(){
-    if(confirm("抽選を終了しますか？この操作は取り消しできません")){
-      console.log('destroy');  
-      updateToken(function(){
-        $.ajax({
-          url: '/destroy/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
-          method: 'POST',
-          success: function(e){
-            window.location.href="/";
-          }
+    if($('#token').length > 0){
+      if(confirm("抽選を終了しますか？この操作は取り消しできません")){
+        console.log('destroy');  
+        updateToken(function(){
+          $.ajax({
+            url: '/destroy/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
+            method: 'POST',
+            success: function(e){
+              goodbye();
+            }
+          });
         });
-      });
+      }
+    }else{
+      goodbye();
     }
   });
-
 });
