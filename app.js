@@ -265,7 +265,7 @@ app.post('/select', function(req, res){
             }else{
               // 当選処理開始
               lotteries[0].status = 'calling';
-              lotteries[0].call_session = lotteries[0].call_session + data.length;
+              lotteries[0].call_session = lotteries[0].call_session + docs.length;
               lotteries[0].save(function(e){
                 if(e){
                   res.json({success: false, message: "データベースにエラーが発生しました"});
