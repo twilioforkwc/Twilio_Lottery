@@ -476,5 +476,26 @@ app.post('/status/:token', function(req, res){
   });
 });
 
+//通話を中止する
+app.post('/stop/:token', function(req, res){
+  Lottery.find({token: req.param('token')}, function(e, ls){
+    if(!e){
+      var client = new twilio.RestClient(ls.account_sid, ls.auth_token);
+      Phone.find({token: req.param('token')}, function(err, docs){
+        if(!err){
+          for(var i = 0, l = docs.length; i < l; i++){
+            client.calls(docs[i].callsid).update({status: 'completed'}, function(err, call){
+              if(!err){
+                docs[i].callstatus = 'canceled';
+                docs[i].save();
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+});
+
 // Here we go!
 app.listen(process.env.PORT || 3000);

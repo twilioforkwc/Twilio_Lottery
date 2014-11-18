@@ -8,6 +8,7 @@ var PhoneSchema = new Schema({
   token: { type: String },
   status: { type: String },
   callstatus: { type: String },
+  callsid: { type: String },
   createdAt: { type: Date, expires: expire + 's' }
 });
 

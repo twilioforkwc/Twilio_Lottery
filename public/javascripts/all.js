@@ -174,6 +174,17 @@ $(document).ready(function(){
     window.location.href="/";
   }
 
+  $('#halt').click(function(){
+    updateToken(function(){
+      $.ajax({
+        url: '/stop/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
+        method: 'POST',
+        data: "_csrf=" + $('#csrf').val(),
+        success: function(){}
+      });
+    });
+  });
+
   $('#destroy').click(function(){
     if($('#token').length > 0){
       if(confirm("抽選を終了しますか？この操作は取り消しできません")){

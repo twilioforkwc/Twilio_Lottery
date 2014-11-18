@@ -11,6 +11,7 @@ module.exports = function(req, args){
     if(err){
       args.data.status = 'error';
     }else{
+      args.callsid = call.sid;
       args.data.status = 'won';
     }
     args.data.save();
