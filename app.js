@@ -485,13 +485,15 @@ app.post('/stop/:token', function(req, res){
         if(!err){
 var sids = "";
           for(var i = 0, l = docs.length; i < l; i++){
+            if(docs[i].callsid){
 sids += ":" + docs[i].callsid;
-            client.calls(docs[i].callsid).update({status: 'completed'}, function(err, call){
-              if(!err){
-                docs[i].callstatus = 'canceled';
-                docs[i].save();
-              }
-            });
+              client.calls(docs[i].callsid).update({status: 'completed'}, function(err, call){
+                if(!err){
+                  docs[i].callstatus = 'canceled';
+                  docs[i].save();
+                }
+              });
+            }
           }
           res.json({error: false, message: sids});
         }else{
