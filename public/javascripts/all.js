@@ -98,6 +98,13 @@ $(document).ready(function(){
               break;
           }
         }
+        if(e.lottery){
+          if(e.lottery.call_session > 0){
+            $('#call_status').html('<span class="calling">呼び出し中</span>');
+          }else{
+            $('#call_status').html('<span class="end">終了</span>');
+          }
+        }
         if(e.data){
           $('#table').html("");
           var finished = 0;

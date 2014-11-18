@@ -269,6 +269,7 @@ app.post('/select', function(req, res){
             }else{
               // 当選処理開始
               lotteries[0].status = 'calling';
+              lotteries[0].call_session = lotteries[0].call_session + data.length;
               lotteries[0].save(function(e){
                 if(e){
                   res.json({success: false, message: "データベースにエラーが発生しました"});
@@ -459,6 +460,10 @@ app.post('/fallback/:token', function(req, res){
       docs[0].save();
     }
   });
+  Lottery.find({token: req.param('token')}, function(err, docs){
+    docs[0].call_session = docs[0].call_session - 1;
+    docs[0].save();
+  });
 });
 
 //システムから発信した通話が終了した
@@ -468,6 +473,10 @@ app.post('/status/:token', function(req, res){
       docs[0].callstatus = req.param('CallStatus');
       docs[0].save();
     }
+  });
+  Lottery.find({token: req.param('token')}, function(err, docs){
+    docs[0].call_session = docs[0].call_session - 1;
+    docs[0].save();
   });
 });
 

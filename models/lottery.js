@@ -13,6 +13,7 @@ var LotterySchema = new Schema({
   sms_phone_number: { type: String },
   sms_sid: { type: String },
   token: { type: String },
+  call_session: { type: Number },
   mode: { type: String },
   original_voice_url: { type: String },
   voice_file: { type: String },

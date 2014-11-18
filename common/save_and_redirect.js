@@ -13,6 +13,7 @@ module.exports = function(req, res, sid, auth_token, number, generated_token, vo
   lottery.voice_file = file_path;
   lottery.voice_text = voice_text;
   lottery.mode = mode;
+  lottery.call_session = 0;
   lottery.save(function(err){
     if(err){
       res.json({success: false, message: 'データを保存できませんでした'});
