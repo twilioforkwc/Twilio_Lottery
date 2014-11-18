@@ -479,10 +479,12 @@ app.post('/status/:token', function(req, res){
 //通話を中止する
 app.post('/stop/:token', function(req, res){
   Lottery.find({token: req.param('token')}, function(e, ls){
-    if(!e){
+    if(!e && ls.length > 0){
       var client = new twilio.RestClient(ls[0].account_sid, ls[0].auth_token);
       Phone.find({token: req.param('token')}, function(err, docs){
         if(!err){
+var sids = "";
+sids += ":" + docs[i].callsid;
           for(var i = 0, l = docs.length; i < l; i++){
             client.calls(docs[i].callsid).update({status: 'completed'}, function(err, call){
               if(!err){
@@ -491,8 +493,13 @@ app.post('/stop/:token', function(req, res){
               }
             });
           }
+          res.json({error: false, message: sids});
+        }else{
+          res.json({error: true, message: "該当する番号が見つかりませんでした"});
         }
       });
+    }else{
+      res.json({error: true, message: "該当する抽選が見つかりませんでした"});
     }
   });
 });

@@ -180,7 +180,7 @@ $(document).ready(function(){
         url: '/stop/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
         method: 'POST',
         data: "_csrf=" + $('#csrf').val(),
-        success: function(){}
+        success: function(e){alert(e.message);}
       });
     });
   });
