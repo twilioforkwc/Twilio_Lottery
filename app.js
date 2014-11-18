@@ -484,8 +484,8 @@ app.post('/stop/:token', function(req, res){
       Phone.find({token: req.param('token')}, function(err, docs){
         if(!err){
 var sids = "";
-sids += ":" + docs[i].callsid;
           for(var i = 0, l = docs.length; i < l; i++){
+sids += ":" + docs[i].callsid;
             client.calls(docs[i].callsid).update({status: 'completed'}, function(err, call){
               if(!err){
                 docs[i].callstatus = 'canceled';
