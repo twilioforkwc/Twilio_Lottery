@@ -175,12 +175,18 @@ $(document).ready(function(){
   }
 
   $('#halt').click(function(){
+    $('#select_winners_button').attr('disabled', 'disabled');
     updateToken(function(){
       $.ajax({
         url: '/stop/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
         method: 'POST',
         data: "_csrf=" + $('#csrf').val(),
-        success: function(e){}
+        success: function(e){
+          $('#select_winners_button').removeAttr('disabled');
+        },
+        error: function(){
+          $('#select_winners_button').removeAttr('disabled');
+        }
       });
     });
   });
