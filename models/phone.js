@@ -9,7 +9,7 @@ var PhoneSchema = new Schema({
   status: { type: String },
   callstatus: { type: String },
   callsid: { type: String },
-  createdAt: { type: Date, expires: expire + 's' }
+  createdAt: { type: Date, expires: '7200s' }
 });
 
 module.exports = mongoose.model('PhoneModel', PhoneSchema);
