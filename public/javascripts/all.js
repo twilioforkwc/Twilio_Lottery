@@ -172,6 +172,7 @@ $(document).ready(function(){
 
   function goodbye(){
     window.location.href="/";
+    //window.close();
   }
 
   $('#halt').click(function(){
