@@ -5,10 +5,7 @@ $(document).ready(function(){
   }
 
   function hideLoading(){
-    var elements = $('loading');
-    for(var e in elements){
-      $('body')[0].remove(e);
-    }
+    $('.loading').remove();
   }
 
   $('#login_button').click(function(e){
@@ -32,6 +29,7 @@ $(document).ready(function(){
     return false;
   });
   $('#submit_button').click(function(e){
+    showLoading();
     submitLottery('');
     return false;
   });
@@ -74,7 +72,10 @@ $(document).ready(function(){
             }
           }
         },
-        error: function(e){alert('エラーが発生しました');}
+        error: function(e){
+          hideLoading();
+          alert('エラーが発生しました');
+        }
       });
     });
   }
