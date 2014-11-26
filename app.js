@@ -23,6 +23,8 @@ var phone_call = require(__dirname + '/common/phone_call');
 var speak_error_message = require(__dirname + '/common/speak_error_message');
 var send_xml = require(__dirname + '/common/send_xml');
 var send_sms = require(__dirname + '/common/send_sms');
+var hangup = require(__dirname + '/common/hangup');
+var clear_all = require(__dirname + '/common/clear_all');
 
 /* configuration */
 var app = express();
@@ -253,7 +255,9 @@ app.post('/select', function(req, res){
         var args = {token: req.param('token')};
         if(req.param('no_dup')){
           args.status = {'$ne': 'won'};
-        }
+        }//else{
+          //clear_all(req.param('token'));
+        //}
         Phone.find(args, function(err, docs){
           if(err){
             res.json({success: false, message: "データベースにエラーが発生しました"});
@@ -263,6 +267,7 @@ app.post('/select', function(req, res){
             }else if(docs.length < num){
               res.json({success: false, message: "応募者数が当選者数より少ないため実行できません"});
             }else{
+              // 当選やり直し処理
               // 当選処理開始
               lotteries[0].action_status = 'calling';
               lotteries[0].call_session = lotteries[0].call_session + docs.length;
@@ -270,11 +275,18 @@ app.post('/select', function(req, res){
                 if(e){
                   res.json({success: false, message: "データベースにエラーが発生しました"});
                 }else{
-                  var data = shuffle(docs);
-                  var max = req.param('num');
-                  for(var i = 0, len = data.length; i < max; i++){
-                    data[i].status = 'calling';
-                    phone_call(req, {data: data[i], lottery: lotteries[0]});
+                  var start_phone_call = function(){
+                    var data = shuffle(docs);
+                    var max = req.param('num');
+                    for(var i = 0, len = data.length; i < max; i++){
+                      data[i].status = 'calling';
+                      phone_call(req, {data: data[i], lottery: lotteries[0]});
+                    }
+                  };
+                  if(!req.param('no_dup')){
+                    clear_all(docs, start_phone_call);
+                  }else{
+                    start_phone_call();
                   }
                 }
               });
@@ -396,7 +408,7 @@ app.post('/twilio', function(req, res){
             if(phone.status == 'trial'){
               //SMS送信
               var url = req.hostname + "/l/" + lottery_data.token;
-              var body = "抽選アプリのURLは"+ url +" です。画面を閉じてしまった時にご利用下さい。";
+              var body = "抽選アプリのURLは "+ url +" です。画面を閉じてしまった時にご利用下さい。";
               send_sms(lottery_data.account_sid, lottery_data.auth_token, body,  lottery_data.sms_phone_number, req.param('From'));
 
               if(lottery_data.voice_file){
@@ -406,24 +418,19 @@ app.post('/twilio', function(req, res){
                 //send_xml(res, resp.say(lottery_data.voice_text));
               }
             }else{
-              speak_error_message(res, 'お申し込みを受け付けました');
+              if(lottery_data.sms_phone_number){
+                speak_error_message(res, 'お申し込みを受け付けました。ご契約キャリアおよび電波状況によりSMS到着しない場合がございます。');
+              }else{
+                speak_error_message(res, 'お申し込みを受け付けました');
+              }
               //SMS送信
               send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録が終了いたしました。抽選開始までしばらくお待ちください。",  lottery_data.sms_phone_number, req.param('From'));
             }
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
+            //IVRに変更予定
             for(var k = 0, l = p_docs.length; k < l; k++){
-              //switch(p_docs[k].status){
-              //  case "won":
-              //    //当選済みなのでキャンセルできない
-              //    break;
-              //  case "calling":
-              //    //通話中なのでキャンセルしないで
-              //    break;
-              //  default:
-                  p_docs[k].remove();
-              //    break;
-              //}
+              p_docs[k].remove();
             }
             speak_error_message(res, 'お申し込みをキャンセルしました');
             send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
@@ -460,6 +467,7 @@ app.post('/fallback/:token', function(req, res){
     docs[0].call_session = docs[0].call_session - 1;
     docs[0].save();
   });
+  hangup();
 });
 
 //システムから発信した通話が終了した
@@ -474,6 +482,8 @@ app.post('/status/:token', function(req, res){
     docs[0].call_session = docs[0].call_session - 1;
     docs[0].save();
   });
+  //Hangupを返す
+  hangup();
 });
 
 //通話を中止する
