@@ -1,6 +1,18 @@
 $(document).ready(function(){
 
+  function showLoading(){
+    $('body').append('<div class="loading"><img class="loading-animation" src="/img/loading.gif" /></div>');
+  }
+
+  function hideLoading(){
+    var elements = $('loading');
+    for(var e in elements){
+      $('body')[0].remove(e);
+    }
+  }
+
   $('#login_button').click(function(e){
+    showLoading();
     $('#login_form').submit();
   });
 
@@ -15,6 +27,7 @@ $(document).ready(function(){
     });
   }
   $('#tmp_button').click(function(e){
+    showLoading();
     submitLottery('trial');
     return false;
   });
@@ -48,8 +61,10 @@ $(document).ready(function(){
         data: form_data,
         success: function(e){
           if(e.error){
+            hideLoading();
             alert(e.message);
           }else{
+            hideLoading();
             if(mode == 'trial'){
               //alert("success:" + e.message);
               $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
