@@ -156,56 +156,66 @@ app.post('/number', function(req, res){
   var mode = req.param('mode');
   var generated_token;
 
-  function random(){
-    return Math.random().toString(18).substr(4);
-  }
-  function generate(){
-    //var token = random() + random();
-    var token = random();
-    Lottery.where({token: generated_token}).count(function(err, count){
-      if(!err && count > 0){
-        generate();
-        return;
-      }else{
-        generated_token = token;
-        //MongoDBに登録
-        var save_path = "";
-        save_path = __dirname + "files";
-        if(req.files.voice_file){
-          fs.exists(req.files.voice_file.path, function(exists){
-            if(exists){
-              save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
-            }else{
-              save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
-            }
-          });
+  if(!number || (!voice_text && !voice_file)){
+    var message = "電話番号とテキストまたはMP3は必須項目です。";
+    if(mode == "trial"){
+      res.json({error: true, message: message});
+    }else{
+      req.session.message = message;
+      res.redirect('/error');
+    }
+  }else{
+    function random(){
+      return Math.random().toString(18).substr(4);
+    }
+    function generate(){
+      //var token = random() + random();
+      var token = random();
+      Lottery.where({token: generated_token}).count(function(err, count){
+        if(!err && count > 0){
+          generate();
+          return;
         }else{
-            save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, null, mode);
+          generated_token = token;
+          //MongoDBに登録
+          var save_path = "";
+          save_path = __dirname + "files";
+          if(req.files.voice_file){
+            fs.exists(req.files.voice_file.path, function(exists){
+              if(exists){
+                save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
+              }else{
+                save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, req.files.voice_file.path, mode);
+              }
+            });
+          }else{
+              save_and_redirect(req, res, sid, auth_token, number, generated_token, voice_text, null, mode);
+          }
         }
+      });
+    }
+    //同じ電話番号が登録されていたらTrialなら消して本番ならエラー
+    Lottery.find({phone_number: format_phone_number(number)}, function(err, docs){
+      var data =[];
+      if(docs.length > 0){
+        for(var i = 0, len = docs.length; i < len; i++){
+          if(docs[i].mode === "trial"){
+            docs[i].remove();
+          }else{
+            data.push(docs[i]);
+          }
+        }
+        if(data.length > 0){
+          //同じ番号で本番データがある
+          res.json({error: true, message: "この番号は現在既に利用されています"});
+        }else{
+          generate();
+        }
+      }else{
+        generate();
       }
     });
   }
-  //同じ電話番号が登録されていたらTrialなら消して本番ならエラー
-  Lottery.find({phone_number: format_phone_number(number)}, function(err, docs){
-    var data =[];
-    if(docs.length > 0){
-      for(var i = 0, len = docs.length; i < len; i++){
-        if(docs[i].mode === "trial"){
-          docs[i].remove();
-        }else{
-          data.push(docs[i]);
-        }
-      }
-      if(data.length > 0){
-        //同じ番号で本番データがある
-        res.json({error: true, message: "この番号は現在既に利用されています"});
-      }else{
-        generate();
-      }
-    }else{
-      generate();
-    }
-  });
 });
 
 app.get('/token', function(req, res){
