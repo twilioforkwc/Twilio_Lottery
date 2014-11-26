@@ -25,6 +25,7 @@ var send_xml = require(__dirname + '/common/send_xml');
 var send_sms = require(__dirname + '/common/send_sms');
 var hangup = require(__dirname + '/common/hangup');
 var clear_all = require(__dirname + '/common/clear_all');
+var delete_mp3 = require(__dirname + '/common/delete_mp3');
 
 /* configuration */
 var app = express();
@@ -354,6 +355,7 @@ app.post('/destroy/:token', function(req, res){
   Lottery.find({token: req.param('token')}, function(err, docs){
     if(!err){
       for(var i = 0, len = docs.length; i < len; i++){
+        delete_mp3(docs[i]);
         docs[i].remove();
       }
     }

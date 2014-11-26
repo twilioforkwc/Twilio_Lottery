@@ -8,6 +8,14 @@ $(document).ready(function(){
     $('.loading').remove();
   }
 
+  function showMovie(){
+    $('body').append('<div class="loading"><img class="loading-animation" src="/img/movie.gif" /></div>');
+  }
+
+  function hideMovie(){
+    $('.loading').remove();
+  }
+
   $('#login_button').click(function(e){
     showLoading();
     $('#login_form').submit();
@@ -167,6 +175,7 @@ $(document).ready(function(){
   }
 
   $('#select_winners_button').click(function(){
+    showMovie();
     updateToken(startSelection);
     return false;
   });
@@ -178,9 +187,13 @@ $(document).ready(function(){
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){
+        hideMovie();
         if(e.success === false){
           alert(e.message);
         }
+      },
+      error: function(){
+        hideMovie();
       }
     });
     return false;
