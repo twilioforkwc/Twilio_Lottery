@@ -157,7 +157,7 @@ app.post('/number', function(req, res){
   var mode = req.param('mode');
   var generated_token;
 
-  if(!number || (!voice_text && !voice_file)){
+  if(!number || (!voice_text && !req.files.voice_file)){
     var message = "電話番号とテキストまたはMP3は必須項目です。" + voice_file;
     if(mode == "trial"){
       res.json({error: true, message: message});
