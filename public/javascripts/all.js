@@ -14,9 +14,11 @@ $(document).ready(function(){
   }
 
   function hideMovie(){
-    $('.loading-dark').remove();
-    $('.loading-movie').effect('fade', {}, 500);
-    $('.loading-movie').remove();
+    setTimeout(function(){
+      $('.loading-dark').remove();
+      $('.loading-movie').effect('fade', {}, 500);
+      $('.loading-movie').remove();
+    }, 3000);
   }
 
   $('#login_button').click(function(e){
@@ -194,9 +196,7 @@ $(document).ready(function(){
           hideMovie();
           alert(e.message);
         }else{
-          setTimeout(function(){
-            hideMovie();
-          }, 3000);
+          hideMovie();
         }
       },
       error: function(){
