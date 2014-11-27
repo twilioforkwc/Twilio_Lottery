@@ -777,6 +777,7 @@ div.loading {
 }
 
 img.loading-animation {
+  display: none;
   position: absolute;
   width: 120;
   height: 120;
