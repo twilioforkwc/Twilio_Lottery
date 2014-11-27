@@ -14,10 +14,11 @@ $(document).ready(function(){
 
   function hideMovie(){
     setTimeout(function(){
-      $('.loading-dark').remove();
-      $('.loading-movie').effect('fade', {}, 500);
-      $('.loading-movie').remove();
-    }, 3000);
+      $('.loading-movie').effect('fade', {}, 500, function(){
+        $('.loading-dark').remove();
+        $('.loading-movie').remove();
+      });
+    }, 2000);
   }
 
   $('#login_button').click(function(e){
