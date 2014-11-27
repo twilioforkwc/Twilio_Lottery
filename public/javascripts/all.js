@@ -190,12 +190,8 @@ $(document).ready(function(){
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){
-        if(e.success === false){
-          hideMovie();
-          alert(e.message);
-        }else{
-          hideMovie();
-        }
+        hideMovie();
+        alert(e.message);
       },
       error: function(){
         hideMovie();
