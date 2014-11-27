@@ -167,7 +167,7 @@ app.post('/number', function(req, res){
     }
   }else{
     function random(){
-      return Math.random().toString(18).substr(4);
+      return Math.random().toString(32).substr(4);
     }
     function generate(){
       //var token = random() + random();
