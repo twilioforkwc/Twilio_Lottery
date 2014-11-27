@@ -13,12 +13,10 @@ $(document).ready(function(){
   }
 
   function hideMovie(){
-    setTimeout(function(){
-      $('.loading-movie').effect('fade', {}, 500, function(){
-        $('.loading-dark').remove();
-        $('.loading-movie').remove();
-      });
-    }, 1000);
+    $('.loading-movie').effect('fade', {}, 500, function(){
+      $('.loading-dark').remove();
+      $('.loading-movie').remove();
+    });
   }
 
   $('#login_button').click(function(e){
