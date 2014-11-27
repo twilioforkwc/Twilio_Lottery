@@ -13,7 +13,7 @@ $(document).ready(function(){
   }
 
   function hideMovie(){
-    $('.loading-movie').effect('fade', {}, 500, function(){
+    $('.loading-movie').effect('fade', {}, 2000, function(){
       $('.loading-dark').remove();
       $('.loading-movie').remove();
     });
