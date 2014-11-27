@@ -188,9 +188,13 @@ $(document).ready(function(){
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){
-        hideMovie();
         if(e.success === false){
+          hideMovie();
           alert(e.message);
+        }else{
+          setTimeout(function(){
+            hideMovie();
+          }, 3000);
         }
       },
       error: function(){
