@@ -172,7 +172,7 @@ app.post('/number', function(req, res){
     function generate(){
       //var token = random() + random();
       var token = random();
-      Lottery.where({token: generated_token}).count(function(err, count){
+      Lottery.where({token: token}).count(function(err, count){
         if(!err && count > 0){
           generate();
           return;
