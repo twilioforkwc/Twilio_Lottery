@@ -190,7 +190,9 @@ $(document).ready(function(){
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){
-        hideMovie();
+        setTimeout(function(){
+          hideMovie();
+        }, 3000);
         alert(e.message);
       },
       error: function(){
