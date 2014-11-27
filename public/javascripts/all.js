@@ -10,7 +10,6 @@ $(document).ready(function(){
 
   function showMovie(){
     $('body').append('<div class="loading-dark"></div><img class="loading-movie" src="/img/movie.gif" />');
-    $('.loading-animation').effect('fade', {}, 500);
   }
 
   function hideMovie(){

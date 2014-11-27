@@ -788,7 +788,6 @@ img.loading-animation {
 }
 
 img.loading-movie{
-  display: none;
   position: absolute;
   width: 750;
   height: 750;
