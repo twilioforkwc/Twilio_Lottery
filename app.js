@@ -431,7 +431,7 @@ app.post('/twilio', function(req, res){
               }
             }else{
               if(lottery_data.sms_phone_number){
-                speak_error_message(res, 'お申し込みを受け付けました。ご契約キャリアおよび電波状況によりSMS到着しない場合がございます。');
+                speak_error_message(res, 'お申し込みを受け付けました。ご契約キャリアおよび電波状況によりエスエムエスが到着しない場合がございます。');
               }else{
                 speak_error_message(res, 'お申し込みを受け付けました');
               }
