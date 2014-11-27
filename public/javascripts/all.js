@@ -18,7 +18,7 @@ $(document).ready(function(){
         $('.loading-dark').remove();
         $('.loading-movie').remove();
       });
-    }, 2000);
+    }, 1000);
   }
 
   $('#login_button').click(function(e){
