@@ -14,7 +14,7 @@ $(document).ready(function(){
 
   function hideMovie(){
     $('.loading').remove();
-    $('loading-animation').remove();
+    $('.loading-animation').remove();
   }
 
   $('#login_button').click(function(e){
