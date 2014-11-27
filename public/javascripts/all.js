@@ -50,7 +50,6 @@ $(document).ready(function(){
     updateToken(function(elem){
       $('#message_area').html('');
       var form_data = new FormData();
-      var file_data = $('#voice_file').prop('files')[0];
       if(mode == 'trial'){
         form_data.append('mode', 'trial');
       }
@@ -59,6 +58,7 @@ $(document).ready(function(){
       form_data.append('sms_phone_number', $('#sms_phone_number').val());
       form_data.append('_csrf', $('#csrf').val());
       if($('#voice_file').val()){
+        var file_data = $('#voice_file').prop('files')[0];
         form_data.append('voice_file', file_data);
       }
       $.ajax({
