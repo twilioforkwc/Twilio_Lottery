@@ -777,7 +777,6 @@ div.loading {
 }
 
 img.loading-animation {
-  display: none;
   position: absolute;
   width: 120;
   height: 120;
@@ -788,6 +787,17 @@ img.loading-animation {
   margin: auto;
 }
 
+img.loading-movie{
+  display: none;
+  position: absolute;
+  width: 750;
+  height: 750;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
 div.loading-dark {
   position: absolute;
   top: 0;

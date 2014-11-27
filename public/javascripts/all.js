@@ -9,14 +9,14 @@ $(document).ready(function(){
   }
 
   function showMovie(){
-    $('body').append('<div class="loading-dark"></div><img class="loading-animation" src="/img/movie.gif" />');
+    $('body').append('<div class="loading-dark"></div><img class="loading-movie" src="/img/movie.gif" />');
     $('.loading-animation').effect('fade', {}, 500);
   }
 
   function hideMovie(){
     $('.loading-dark').remove();
-    $('.loading-animation').effect('fade', {}, 500);
-    $('.loading-animation').remove();
+    $('.loading-movie').effect('fade', {}, 500);
+    $('.loading-movie').remove();
   }
 
   $('#login_button').click(function(e){
