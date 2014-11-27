@@ -9,11 +9,11 @@ $(document).ready(function(){
   }
 
   function showMovie(){
-    $('body').append('<div class="loading"></div><img class="loading-animation" src="/img/movie.gif" />');
+    $('body').append('<div class="loading-dark"></div><img class="loading-animation" src="/img/movie.gif" />');
   }
 
   function hideMovie(){
-    $('.loading').remove();
+    $('.loading-dark').remove();
     $('.loading-animation').remove();
   }
 
