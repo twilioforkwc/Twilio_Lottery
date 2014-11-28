@@ -181,6 +181,7 @@ $(document).ready(function(){
     showMovie();
     setTimeout(function(e){
       updateToken(startSelection);
+      hideMovie();
     }, 5000);
     return false;
   });
@@ -192,9 +193,9 @@ $(document).ready(function(){
       method: 'POST',
       data: data + "&token=" + $('#token').html(),
       success: function(e){
-        setTimeout(function(){
-          hideMovie();
-        }, 3000);
+        //setTimeout(function(){
+        //  hideMovie();
+        //}, 3000);
         //alert(e.message);
       },
       error: function(){
