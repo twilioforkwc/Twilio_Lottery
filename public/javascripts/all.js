@@ -195,7 +195,7 @@ $(document).ready(function(){
         setTimeout(function(){
           hideMovie();
         }, 3000);
-        alert(e.message);
+        //alert(e.message);
       },
       error: function(){
         hideMovie();
