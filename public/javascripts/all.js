@@ -179,7 +179,9 @@ $(document).ready(function(){
 
   $('#select_winners_button').click(function(){
     showMovie();
-    updateToken(startSelection);
+    setTimeout(function(e){
+      updateToken(startSelection);
+    }, 5000);
     return false;
   });
 
