@@ -200,10 +200,12 @@ $(document).ready(function(){
       var list = _.map($('.winners_number'), function(e){
         return '<li>' + $(e).html() + '</li>';
       });
-      $('.prizewinnerNum').html(list);
+      if(list){
+        $('.prizewinnerNum').html(list);
+        $('#winners_list').dialog("open");
+      }
     }
     winners_list_timer = setInterval(updateWinners, 1000);
-    $('#winners_list').dialog("open");
   }
   $('#winners_list').dialog({
     dialogClass: 'no-close',
