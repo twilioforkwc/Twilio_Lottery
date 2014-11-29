@@ -134,6 +134,7 @@ $(document).ready(function(){
             alert("あと15分でデータが消去されます。抽選を行って下さい。");
             time_alert = false;
           }else{
+            console.log(offset);
             console.log(limit);
             console.log(current_time);
           }
