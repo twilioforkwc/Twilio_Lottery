@@ -825,3 +825,21 @@ div.loading-dark {
   margin: 0;
   padding: 0;
 }
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.no-close .ui-dialog-titlebar {
+  display: none;
+}
+
+.modal_footer {
+  position: relative;
+  margin-top: -130px;
+  clear: both;
+  overflow: hidden;
+  text-align: center;
+  background: #fff;
+  height: 80px;
+}

@@ -139,7 +139,7 @@ $(document).ready(function(){
             var status, postfix, className;
             switch(e.data[i].status){
               case "calling":
-                status = '発信中';
+                status = '呼び出し中';
                 postfix = '';
                 className = 'calling';
                 break;
@@ -186,7 +186,7 @@ $(document).ready(function(){
                 postfix = '';
                 break;
               }
-            $('#table').append('<tr><th>'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
+            $('#table').append('<tr><th class="winners_number">'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
           } 
           $('#finished').html(finished);
         }
@@ -194,11 +194,35 @@ $(document).ready(function(){
     });
   }
 
+  var winners_list_timer;
+  function showWinners(){
+    function updateWinners(){
+      var list = _.map($('.winners_number'), function(e){
+        return '<li>' + $(e).html() + '</li>';
+      });
+      $('.prizewinnerNum').html(list);
+    }
+    winners_list_timer = setInterval(updateWinners, 1000);
+    $('#winners_list').dialog("open");
+  }
+  $('#winners_list').dialog({
+    dialogClass: 'no-close',
+    autoOpen: false,
+    modal: true,
+    minWidth: 900,
+    minHeight: 600
+  });
+  $('#winners_list_close').click(function(){
+    $('#winners_list').dialog("close");
+    clearInterval(winners_list_timer);
+  });
+
   $('#select_winners_button').click(function(){
     showMovie();
     setTimeout(function(e){
       updateToken(startSelection);
       hideMovie();
+      showWinners();
     }, 5000);
     return false;
   });
