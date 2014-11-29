@@ -126,7 +126,7 @@ $(document).ready(function(){
       success: function(e){
         if(e.lottery){
           var createdAt = e.lottery.createdAt.toString().replace(/T/, ' ').replace(/\.[0-9]*Z/, '');
-          var limit = Date.parseExact(createdAt, "yyyy-MM-dd HH:mm:ss").addHours(11).addMinutes(-15);
+          var limit = Date.parseExact(createdAt, "yyyy-MM-dd HH:mm:ss").setTimezoneOffset("+0900").addHours(2).addMinutes(-15);
           var current_time = Date.today().setTimeToNow();
           if(time_alert && Date.compare(current_time, limit) > 0){
             alert("あと15分でデータが消去されます。抽選を行って下さい。");
