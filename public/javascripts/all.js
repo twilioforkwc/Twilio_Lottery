@@ -80,6 +80,7 @@ $(document).ready(function(){
               //alert("success:" + e.message);
               $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
               $('#submit_button').removeAttr('disabled');
+              $('#submit_button').addClass('red');
             }else{
               location.href = e.url;
             }
