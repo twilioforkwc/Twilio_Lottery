@@ -156,6 +156,7 @@ $(document).ready(function(){
               case "won":
                 status = '通話終了';
                 className = 'end';
+                postfix = '';
                 //if(e.data[i].callstatus == 'completed'){
                 //  postfix = '<li class="winner">通知済</li>';
                 //  finished += 1;

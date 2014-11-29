@@ -479,7 +479,7 @@ app.post('/fallback/:token', function(req, res){
     docs[0].call_session = docs[0].call_session - 1;
     docs[0].save();
   });
-  hangup();
+  hangup(res);
 });
 
 //システムから発信した通話が終了した
@@ -495,7 +495,7 @@ app.post('/status/:token', function(req, res){
     docs[0].save();
   });
   //Hangupを返す
-  hangup();
+  hangup(res);
 });
 
 //通話を中止する
