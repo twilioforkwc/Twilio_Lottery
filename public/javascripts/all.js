@@ -143,41 +143,42 @@ $(document).ready(function(){
                 postfix = '';
                 className = 'calling';
                 break;
-              case "online":
-                status = '通話中';
-                postfix = '';
-                className = 'calling';
-                break;
               case "error":
                 status = 'エラー';
                 className = 'end';
                 postfix = '';
                 break;
               case "won":
-                status = '通話終了';
-                className = 'end';
-                postfix = '';
+                if(e.data[i].callstatus){
+                  status = '通話終了';
+                  className = 'end';
+                  postfix = '';
+                  switch(e.data[i].callstatus){
+                    case "completed":
+                      postfix = '<li class="winner">通知済</li>';
+                      finished += 1;
+                    break;
+                    case "busy":
+                    case "error":
+                    case "failed":
+                    case "no-answer":
+                      postfix = '<li class="response">応答なし</li>';
+                      finished += 1;
+                    break;
+                    default:
+                    break;
+                  }
+                }else{
+                  status = '発信中';
+                  postfix = '';
+                  className = 'calling';
+                }
                 //if(e.data[i].callstatus == 'completed'){
                 //  postfix = '<li class="winner">通知済</li>';
                 //  finished += 1;
                 //}else{
                 //  postfix = '<li class="winner">当選</li>';
                 //}
-                switch(e.data[i].callstatus){
-                  case "completed":
-                    postfix = '<li class="winner">通知済</li>';
-                    finished += 1;
-                  break;
-                  case "busy":
-                  case "error":
-                  case "failed":
-                  case "no-answer":
-                    postfix = '<li class="response">応答なし</li>';
-                    finished += 1;
-                  break;
-                  default:
-                  break;
-                }
                 break;
               default:
                 status = '待機中';
