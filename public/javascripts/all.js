@@ -126,15 +126,12 @@ $(document).ready(function(){
       success: function(e){
         if(e.lottery){
           var createdAt = e.lottery.createdAt.toString().replace(/T/, ' ').replace(/\.[0-9]*Z/, '');
-          var offset = Date.getTimezoneOffset("JST", true);
-          offset += 2;
-          var limit = Date.parseExact(createdAt, "yyyy-MM-dd HH:mm:ss").addHours(offset).addMinutes(-15);
+          var limit = Date.parseExact(createdAt, "yyyy-MM-dd HH:mm:ss").setTimezone("JST").addHours(2).addMinutes(-15);
           var current_time = Date.today().setTimeToNow();
           if(time_alert && Date.compare(current_time, limit) > 0){
             alert("あと15分でデータが消去されます。抽選を行って下さい。");
             time_alert = false;
           }else{
-            console.log(offset);
             console.log(limit);
             console.log(current_time);
           }
