@@ -150,13 +150,13 @@ h2 {
 
 dl.tableLayout {
   overflow: hidden;
-  width: 666px;
+  width: 860px;
   margin: 0 auto;
 }
 dl.tableLayout dt {
   float: left;
   clear: left;
-  width: 10em;
+  width: 14em;
   padding: 0.5em 0 0;
 }
 dl.tableLayout dt.noTable {
@@ -842,4 +842,9 @@ div.loading-dark {
   text-align: center;
   background: #fff;
   height: 80px;
+}
+
+.warning {
+  color: Red;
+  font-size: small;
 }

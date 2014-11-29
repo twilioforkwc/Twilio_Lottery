@@ -78,7 +78,7 @@ $(document).ready(function(){
             hideLoading();
             if(mode == 'trial'){
               //alert("success:" + e.message);
-              $('#message_area').html('<p class="mes">仮設定しました。'+e.message+'</p>');
+              $('#message_area').html('<p class="mes">仮設定が完了しました。こちらの番号に電話をかけてください。 '+e.message+'</p>');
               $('#submit_button').removeAttr('disabled');
               $('#submit_button').addClass('red');
             }else{

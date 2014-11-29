@@ -9,33 +9,37 @@
 	<div id="wrapper">
     <div id="message_area"></div>
 		<dl class="tableLayout">
-			<dt>利用する電話番号</dt>
+			<dt>①抽選参加者が電話する番号</dt>
 			<dd>
 				<select class="selectBox" name="phone_number" id="phone_number">
 					<option value="" selected="selected">選択してください</option>
     <%- @options %>
-				</select>
-				※ RequestURL が変更されます</dd>
-			<dt>利用する SMS 番号</dt>
+				</select><br />
+				<span class="warning">＊RequestURLが変更されます。番号を他の用途で利用していないかご確認ください。</dd></span>
+			<dt>②抽選参加者にSMSを送信する電話番号</dt>
 			<dd>
 				<select class="selectBox" name="sms_phone_number" id="sms_phone_number">
 					<option value="" selected="selected">選択してください</option>
     <%- @sms_options %>
-				</select></dd>
-			<dt class="noTable">アナウンス設定</dt>
+				</select><br />
+          <span class="warning">＊仮設定確認、抽選参加確認で利用します。</span>
+        </dd>
+			<dt class="noTable">③当選者アナウンス設定</dt>
 			<dd>
 				<dl class="noTable">
-					<dt>テキスト入力で音声読み上げ</dt>
+					<dt><span class="warning">＊テキスト・mp3 いずれかの入力が必要です</span><br />
+          音声で読み上げられるテキストを入力してください</dt>
 					<dd>
 						<textarea name="voice_text" id="voice_text" cols="40" rows="4" class="sizeL"></textarea>
 					</dd>
-					<dt>mp3 をアップロード</dt>
+					<dt>音声や音楽を再生する場合は こちらからmp3をアップロードしてください</dt>
 					<dd class="fileUploder">
 						<!--デザイン反映用フォーム-->
 						<input type="text" class="txt" readonly>
 						<input type="button" value="参照" class="fileBtn">
 						<input type="file" id="voice_file" name="voice_file" class="uploader">
 					</dd>
+<span class="warning">＊8kbps ロスレス モノラル でエンコードされた MP3を推奨</span>
 				</dl>
 			</dd>
 		</dl>
