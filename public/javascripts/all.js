@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+  var winners_list_timer;
+
   function showLoading(){
     $('body').append('<div class="loading"><img class="loading-animation" src="/img/loading.gif" /></div>');
   }
@@ -194,7 +196,6 @@ $(document).ready(function(){
     });
   }
 
-  var winners_list_timer;
   function showWinners(){
     function updateWinners(){
       var list = _.map($('.winners_number'), function(e){
@@ -220,6 +221,9 @@ $(document).ready(function(){
   });
 
   $('#select_winners_button').click(function(){
+    if(winners_list_timer){
+      clearInterval(winners_list_timer);
+    }
     showMovie();
     setTimeout(function(e){
       updateToken(startSelection);
