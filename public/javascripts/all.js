@@ -2,6 +2,8 @@ $(document).ready(function(){
 
   var winners_list_timer;
 
+  $('.easy-select-box').easySelectBox();
+
   function showLoading(){
     $('body').append('<div class="loading"><img class="loading-animation" src="/img/loading.gif" /></div>');
   }
@@ -125,7 +127,7 @@ $(document).ready(function(){
         if(e.lottery){
           var createdAt = e.lottery.createdAt.toString().replace(/T/, ' ').replace(/\.[0-9]*Z/, '');
           var limit = Date.parseExact(createdAt, "yyyy-MM-dd HH:mm:ss").addHours(2).addMinutes(-15);
-          if(time_alert && limit > Date.today()){
+          if(time_alert && limit < Date.today()){
             alert("あと15分でデータが消去されます。抽選を行って下さい。");
             time_alert = false;
           }

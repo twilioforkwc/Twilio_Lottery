@@ -11,14 +11,14 @@
 		<dl class="tableLayout">
 			<dt>①抽選参加者が電話する番号</dt>
 			<dd>
-				<select class="selectBox" name="phone_number" id="phone_number">
+				<select class="selectBox easy-select-box" name="phone_number" id="phone_number">
 					<option value="" selected="selected">選択してください</option>
     <%- @options %>
 				</select><br />
 				<span class="warning">＊RequestURLが変更されます。番号を他の用途で利用していないかご確認ください。</dd></span>
 			<dt>②抽選参加者にSMSを送信する電話番号</dt>
 			<dd>
-				<select class="selectBox" name="sms_phone_number" id="sms_phone_number">
+				<select class="selectBox easy-select-box" name="sms_phone_number" id="sms_phone_number">
 					<option value="" selected="selected">選択してください</option>
     <%- @sms_options %>
 				</select><br />
