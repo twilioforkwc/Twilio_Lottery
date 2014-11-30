@@ -236,6 +236,11 @@ $(document).ready(function(){
   });
 
   $('#select_winners_button').click(function(){
+
+    if($('#exclude').val()){
+      $('#table').html("");
+    }
+
     if(winners_list_timer){
       clearInterval(winners_list_timer);
     }
