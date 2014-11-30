@@ -311,10 +311,10 @@ $(document).ready(function(){
   });
 
   $('#destroy').click(function(){
-    if($('#token').length > 0){
       if(confirm("抽選を終了しますか？この操作は取り消しできません")){
-        console.log('destroy');  
-        updateToken(function(){
+        if($('#token').length > 0){
+          console.log('destroy');  
+          updateToken(function(){
           $.ajax({
             url: '/destroy/' + $('#token').html() + '?_csrf=' + $('#csrf').val(),
             method: 'POST',
@@ -323,9 +323,9 @@ $(document).ready(function(){
             }
           });
         });
+      }else{
+        goodbye();
       }
-    }else{
-      goodbye();
     }
   });
 });
