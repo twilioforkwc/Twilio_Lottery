@@ -24,10 +24,10 @@ module.exports = function(req, res, sid, auth_token, number, generated_token, vo
         }else{
           switch(mode){
             case "trial":
-              res.json({success: true, message: display_phone_number(number) + 'に電話をかけてください', debug: lottery});
+              res.json({success: true, message: display_phone_number(number), debug: lottery});
               break;
             default:
-              res.json({success: true, message: display_phone_number(number) + 'に電話をかけてください', url: '/l/' + generated_token});
+              res.json({success: true, message: display_phone_number(number), url: '/l/' + generated_token});
               break;
           }
         }
