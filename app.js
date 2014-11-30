@@ -54,7 +54,7 @@ app.use(function(req, res, next){
 console.log(req.path);
   if(csrfExc.indexOf(req.path) !== -1){
     next();
-  }else if(req.path.match(/^\/(call|fallback|status)\//)){
+  }else if(req.path.match(/^\/(call|fallback|status|cancel)\//)){
     next();
   }else{
     csrf()(req, res, next);
