@@ -312,6 +312,17 @@ app.post('/select', function(req, res){
   });
 });
 
+//当選者をいったんクリア
+app.post('/clear/:token', function(req, res){
+  Phone.find({token: req.param('token')}, function(err, docs){
+    if(!err){
+      clear_all(docs, function(){
+        res.json({success: true});
+      });
+    }
+  });
+});
+
 // 当選者に電話をかける
 app.post('/call/:token', function(req, res){
   var resp = new twilio.TwimlResponse();

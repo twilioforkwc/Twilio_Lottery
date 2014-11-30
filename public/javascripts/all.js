@@ -246,12 +246,25 @@ $(document).ready(function(){
     }
     showMovie();
     setTimeout(function(e){
-      updateToken(startSelection);
+      updateToken(function(){
+        if($('#exclude').val()){
+          startSelection();
+        }else{
+          clearAll(startSelection);
+        }
+      });
       hideMovie();
       showWinners();
     }, 5000);
     return false;
   });
+
+  function clearAll(callback){
+    $.ajax({
+      url: '/call' + $('#token').html(),
+      success: function(){callback();}
+    });
+  }
 
   function startSelection(){
     var data = $('#select_winners').serialize();
