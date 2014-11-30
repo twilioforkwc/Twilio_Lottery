@@ -6,7 +6,7 @@ module.exports = function(req, res, token){
     action: req.protocol + "://" + req.hostname + '/twilio/cancel/' + token,
     method: 'POST'
   }, function(node){
-    node.say('抽選の応募をキャンセルされる場合は番号の１を押してください。', {language: 'ja-jp', loop: 3});
+    node.say('抽選の応募をキャンセルされる場合は番号の１を押してください。キャンセルしない場合はそのまま電話をお切りください。', {language: 'ja-jp', loop: 3});
   }).toString();
   res.end(xml);
 };
