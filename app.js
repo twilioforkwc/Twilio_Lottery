@@ -460,7 +460,7 @@ app.post('/twilio', function(req, res){
             //}
             //speak_error_message(res, 'お申し込みをキャンセルしました');
             //send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
-            start_ivr(res, lottery_data.token);
+            start_ivr(req, res, lottery_data.token);
           }
         });
       }
