@@ -149,8 +149,8 @@ $(document).ready(function(){
             $('#call_status').html('<span class="end">終了</span>');
           }
         }
+        $('#table').html("");
         if(e.data){
-          $('#table').html("");
           var finished = 0;
           for(var i = 0, l = e.data.length; i < l; i++){
             var status, postfix, className;
