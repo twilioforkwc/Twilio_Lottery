@@ -286,8 +286,11 @@ $(document).ready(function(){
   }
 
   function goodbye(){
-    //window.location.href="/";
-    window.close();
+    if(window.location.href.match(/start$/)){
+      window.location.href="/";
+    }else{
+      window.close();
+    }
   }
 
   $('#halt').click(function(){

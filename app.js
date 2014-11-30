@@ -319,6 +319,8 @@ app.post('/clear/:token', function(req, res){
       clear_all(docs, function(){
         res.json({success: true});
       });
+    }else{
+      res.json({success: true});
     }
   });
 });
