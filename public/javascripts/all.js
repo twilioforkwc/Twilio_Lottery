@@ -190,12 +190,9 @@ $(document).ready(function(){
                   postfix = '';
                   className = 'calling';
                 }
-                //if(e.data[i].callstatus == 'completed'){
-                //  postfix = '<li class="winner">通知済</li>';
-                //  finished += 1;
-                //}else{
-                //  postfix = '<li class="winner">当選</li>';
-                //}
+                break;
+              case "":
+              case null:
                 break;
               default:
                 status = '待機中';
@@ -203,7 +200,9 @@ $(document).ready(function(){
                 postfix = '';
                 break;
               }
-            $('#table').append('<tr><th class="winners_number">'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
+            if(className){
+              $('#table').append('<tr><th class="winners_number">'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
+            }
           } 
           $('#finished').html(finished);
         }
