@@ -471,7 +471,7 @@ app.post('/twilio', function(req, res){
 });
 
 //キャンセルのIVR
-app.post('/twilio/cancel/:token', function(res, req){
+app.post('/twilio/cancel/:token', function(req, res){
   if(req.param('Digits') == "1"){
     Phone.find({token: req.param('token'), phone_number: format_phone_number(req.param('From'))}, function(err, docs){
       for(var k = 0, l = docs.length; k < l; k++){
