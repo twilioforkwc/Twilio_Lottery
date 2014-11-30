@@ -193,6 +193,7 @@ $(document).ready(function(){
                 break;
               case "":
               case null:
+              case undefined:
                 break;
               default:
                 status = '待機中';
@@ -201,6 +202,7 @@ $(document).ready(function(){
                 break;
               }
             if(className){
+console.log();
               $('#table').append('<tr><th class="winners_number">'+e.data[i].phone_number.substr(-4)+'</th><td><ul><li class="'+className+'">'+status+ postfix + '</ul></td></tr>');
             }
           } 
