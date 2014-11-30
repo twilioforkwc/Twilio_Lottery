@@ -472,18 +472,22 @@ app.post('/twilio', function(req, res){
 
 //キャンセルのIVR
 app.post('/twilio/cancel/:token', function(res, req){
-  Phone.find({token: req.param('token'), phone_number: format_phone_number(req.param('From'))}, function(docs, err){
-    for(var k = 0, l = docs.length; k < l; k++){
-      docs[k].remove();
-    }
-    speak_error_message(res, 'お申し込みをキャンセルしました');
-    Lottery.find({token: req.param('token')}, function(docs, err){
-      if(!err && docs.length > 0){
-        var lottery_data = docs[0];
-        send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+  if(req.param('Digits') == "1"){
+    Phone.find({token: req.param('token'), phone_number: format_phone_number(req.param('From'))}, function(err, docs){
+      for(var k = 0, l = docs.length; k < l; k++){
+        docs[k].remove();
       }
-    });
-  });  
+      speak_error_message(res, 'お申し込みをキャンセルしました');
+      Lottery.find({token: req.param('token')}, function(err, lotteries){
+        if(!err && lotteries.length > 0){
+          var lottery_data = lotteries[0];
+          send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+        }
+      });
+    });  
+  }else{
+    hangup(res);
+  }
 });
 
 //応募者から受信した通話が異常終了した
