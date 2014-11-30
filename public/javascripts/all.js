@@ -260,6 +260,7 @@ $(document).ready(function(){
   });
 
   function clearAll(callback){
+    $('.prizewinnerNum').html("");
     $.ajax({
       url: '/call' + $('#token').html(),
       success: function(){callback();}
