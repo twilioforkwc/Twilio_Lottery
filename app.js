@@ -26,6 +26,7 @@ var send_sms = require(__dirname + '/common/send_sms');
 var hangup = require(__dirname + '/common/hangup');
 var clear_all = require(__dirname + '/common/clear_all');
 var delete_mp3 = require(__dirname + '/common/delete_mp3');
+var start_ivr = require(__dirname + '/common/start_ivr');
 
 /* configuration */
 var app = express();
@@ -454,11 +455,12 @@ app.post('/twilio', function(req, res){
           }else{
             //２回目ならキャンセル処理（過去の履歴は削除）
             //IVRに変更予定
-            for(var k = 0, l = p_docs.length; k < l; k++){
-              p_docs[k].remove();
-            }
-            speak_error_message(res, 'お申し込みをキャンセルしました');
-            send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+            //for(var k = 0, l = p_docs.length; k < l; k++){
+            //  p_docs[k].remove();
+            //}
+            //speak_error_message(res, 'お申し込みをキャンセルしました');
+            //send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+            start_ivr(res, lottery_data.token);
           }
         });
       }
@@ -468,6 +470,21 @@ app.post('/twilio', function(req, res){
   });
 });
 
+//キャンセルのIVR
+app.post('/twilio/cancel/:token', function(res, req){
+  Phone.find({token: req.param('token'), phone_number: format_phone_number(req.param('From'))}, function(docs, err){
+    for(var k = 0, l = docs.length; k < l; k++){
+      docs[k].remove();
+    }
+    speak_error_message(res, 'お申し込みをキャンセルしました');
+    Lottery.find({token: req.param('token')}, function(docs, err){
+      if(!err && docs.length > 0){
+        var lottery_data = docs[0];
+        send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
+      }
+    });
+  });  
+});
 
 //応募者から受信した通話が異常終了した
 app.post('/incoming/fallback/:token', function(req, res){
