@@ -845,6 +845,10 @@ div.loading-dark {
 }
 
 .warning {
-  color: Black;
+  color: Red;
   font-size: small;
+}
+
+.black{
+  color: Black;
 }
