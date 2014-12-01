@@ -96,6 +96,11 @@ $(document).ready(function(){
     });
   }
 
+  $('#voice_file').change(function(e){
+    var filename = $('#voice_file').val();
+    $('#tmp_voice_file').val(filename);
+  });
+
   if($('#candidates').length > 0){
     setInterval(function(e){
       getWinners();
