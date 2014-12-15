@@ -1,0 +1,80 @@
+<% extend 'layout' %>
+<div id="token" style="display:none;"><%= @token %></div>
+	<ul class="progress">
+		<li>ログイン</li>
+		<li>仮設定</li>
+		<li class="current last">抽選開始</li>
+	</ul>
+	<div id="wrapper">
+		<h2>抽選応募 電話番号はこちら <strong><%= @number %></strong></h2>
+		<div class="leftBox">
+			<dl class="tableLayout">
+				<dt>設定状態</dt>
+				<dd id="call_status">
+					<!--呼び出し中に表示-->
+					<!--span class="calling">呼び出し中</span-->
+					<!--/呼び出し中に表示-->
+					<!--待機中に表示-->
+					<span class="waiting">待機中</span>
+					<!--/待機中に表示-->
+					<!--終了時に表示-->
+					<!--span class="end">終了</span-->
+					<!--/終了時に表示-->
+				</dd>
+				<dt>当選人数</dt>
+<form id="select_winners">
+  <input id="csrf" type="hidden" name="_csrf" value="<%= @csrf %>" />  
+				<dd>
+					<input type="text" name="num" value="" class="sizeS">
+					&nbsp;人</dd>
+			</dl>
+			<ul class="submitArea">
+				<li>
+						<button type="button" id="halt" class="gray">中止</button>
+				</li>
+				<li>
+						<button type="button" id="select_winners_button" class="red">抽選開始</button>
+						<br>
+						<input type="checkbox" name="no_dup" id="exclude" checked="checked" />
+						<label for="exclude">当選者をのぞく</label>
+				</li>
+			</ul>
+</form>
+		</div>
+		<div class="rightBox">
+			<h3>当選者リスト</h3>
+			<div class="countArea">
+				<div class="signUp">
+					<p class="count" id="candidates"><%= @num %></p>
+					<p class="text">登録完了</p>
+				</div>
+				<div class="notification">
+					<p class="count" id="finished"><%= @finished %></p>
+					<p class="text">通知済</p>
+				</div>
+				<div class="winner">
+					<p class="count" id="winners">0</p>
+					<p class="text">当選</p>
+				</div>
+			</div>
+			<div class="prizewinner">
+				<table id="table">
+				</table>
+			</div>
+		</div>
+	</div>
+
+<div id="winners_list">
+<div class="container">
+	<h1 class="prize"><img src="/img/prizewinner.png" alt="ご当選おめでとうございます！！" width="700" height="100"></h1>
+	<div id="wrapper">
+		<ul class="prizewinnerNum">
+		</ul>
+	</div>
+</div>
+<div class="modal_footer">
+	<footer>
+		<button id="winners_list_close" type="button" class="close">閉じる</button>
+	</footer>
+</div>
+</div>

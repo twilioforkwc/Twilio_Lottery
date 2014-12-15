@@ -1,0 +1,23 @@
+{
+  "name": "TwilioLottery",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "*",
+    "ect": "*",
+    "mongoose": "*",
+    "connect-mongo": "*",
+    "twilio": "*",
+    "morgan": "*",
+    "body-parser": "*",
+    "express-session": "*",
+    "csurf": "*",
+    "multer": "*",
+    "mkdirp": "*",
+    "fs-extra": "*",
+    "cookie-parser": "*"
+  }
+}
