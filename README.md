@@ -28,7 +28,7 @@
 * (http://twilio.kddi-web.com/solutions/excel/use.html)
 
 ### 動作環境 ###
-* Windows Azure Website + Mongolab(Marcket Place) + Node.js
+* Windows Azure Website + Mongolab(MARKETPLACE) + Node.js
 * いずれのプラン、無料期間内 でもご利用いただけます。
 * Mongolab の設定が必要です
 * [詳しくはこちら](http://azure.microsoft.com/ja-jp/services/websites/)
