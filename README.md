@@ -5,12 +5,11 @@
 ### このレポジトリについて ###
 
 * 「Twilio 抽選アプリ」とは？
-* Excel2013から利用可能な「Officeストアアプリ」の仕組みを利用することで、Excelに電話に自動発信をする機能を追加できます。
-* 公開されているソースを元にご自身で必要な機能を追加できます。
-* 開発を行うことにより、Excel2013以外のオフィスアプリケーションでも動作が可能です。
-* Office 365 や ローカルのファイルサーバーにマニフェスト(クライアント用設定ファイル)を設置することにより特定の組織内のみで使えるアプリにできます。
-  
-* Version 0.1
+* イベントシーズンに最適な、電話での抽選が簡単に行えるアプリケーションです。
+* Twilio のアカウントがあれば、たったの 3 ステップで開始できます。
+* 
+* GitHubにソースコードをアップ致しましたので、ご自身で好きなように変更してご利用下さい。
+* 
 * 現在ご利用いただけるパッケージの詳しい使い方は、下記URLをご覧ください。ご利用いただくためにはTwilioのアカウントが必要です。 
 * [詳しい使い方](hhttp://twilio.kddi-web.com/solutions/lottery/)
 
@@ -29,22 +28,29 @@
 * (http://twilio.kddi-web.com/solutions/excel/use.html)
 
 ### 動作環境 ###
-* Windows Azure Website + Mongolab(Marcket Place)
+* Windows Azure Website + Mongolab(Marcket Place) + Node.js
 * いずれのプラン、無料期間内 でもご利用いただけます。
+* Mongolab の設定が必要です
 * [詳しくはこちら](http://azure.microsoft.com/ja-jp/services/websites/)
 
 ## はじめかた ##
+* Github - twilioforkwcの[Twilio_Lottery](https://github.com/twilioforkwc/Twilio_Lottery) のクローンをご自身のGithubにCloneを作成
 * Windows Azure のサインアップ
-Market Place
-Windows Azure Websiteを1つ作成
+* MARKETPLACE から MongoLab Sandbox 0 INR/month を契約(執筆時は無料)
+* "mongodb://"から始まる接続文字列を取得
+* Windows Azure Websiteを1つ作成
+* 構成 > 接続文字列 > 名前 > MONGOLAB_URI を入力
+* 構成 > 接続文字列 > 値 > 先ほど取得した"mongodb://"から始まる接続文字列 を入力
+* 保存
+* ダッシュボード > ソール管理からのデプロイ設定 > GitHub を選択
+* ご自身のGitHubアカウント 認証情報を入力
+* Twilio_Lottery のソースを選択
+* デプロイ完了
+* 再起動
+* 該当のウェブサイトを開く
 
-
-config/database.yml.sampleをdatabase.ymlに変更してDBへの接続情報を記載
-* config/application.yml.sampleをapplication.ymlに変更して設置するドメイン名などの設定を記載
-* bundle、bundle exec rake db:create、bundle exec rake db:migrate
-* Unicornを利用する場合はconfig/unicorn.rb.sampleを利用できます
-
-
+### 連絡先 ###
+* [Twilio For KDDI Web Communications ウェブサイト](http://twilio.kddi-web.com/)からお問い合わせ下さい。
 
 ### プロジェクトに参加するには ###
 * 必ずテストを追加してください
