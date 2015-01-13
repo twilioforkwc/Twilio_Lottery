@@ -13,6 +13,7 @@ var path = require('path');
 var fs = require('fs-extra');
 var Lottery = require(__dirname + '/models/lottery');
 var Phone = require(__dirname + '/models/phone');
+var History = require(__dirname + '/models/history');
 var display_phone_number = require(__dirname + '/common/display_phone_number');
 var update_voice_url = require(__dirname + '/common/update_voice_url');
 var save_and_redirect = require(__dirname + '/common/save_and_redirect');
@@ -294,6 +295,10 @@ app.post('/select', function(req, res){
                       data[i].status = 'calling';
                       phone_call(req, {data: data[i], lottery: lotteries[0]});
                     }
+                    //DBに履歴保存
+                    var history = new History();
+                    history.numbers = len;
+                    history.save(function(e){});
                   };
                   if(!req.param('no_dup')){
                     clear_all(docs, start_phone_call);
