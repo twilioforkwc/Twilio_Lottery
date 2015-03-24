@@ -15,20 +15,20 @@
 					<option value="" selected="selected">選択してください</option>
     <%- @options %>
 				</select>
-				<span class="warning">※RequestURLが変更されます。番号を他の用途で利用していないかご確認ください</dd></span>
+				<span class="warning">＊RequestURLが変更されます。番号を他の用途で利用していないかご確認ください</dd></span>
 			<dt>②抽選参加者にSMSを送信する電話番号</dt>
 			<dd>
 				<select class="selectBox easy-select-box" name="sms_phone_number" id="sms_phone_number">
 					<option value="" selected="selected">選択してください</option>
     <%- @sms_options %>
 				</select>
-          <span class="warning">※仮設定確認、抽選参加確認で利用します</span>
+          <span class="warning">＊仮設定確認、抽選参加確認で利用します</span>
         </dd>
 			<dt class="noTable">③当選者アナウンス設定</dt>
 			<dd>
 				<dl class="noTable">
-					<dt><span class="warning">音声で再生されるテキスト・mp3 いずれかの入力が必要です</span><br />
-          [テキスト]</dt>
+					<dt><span class="warning black">音声で再生されるテキスト・mp3 いずれかの入力が必要です</span><br />
+          テキスト</dt>
 					<dd>
 						<textarea name="voice_text" id="voice_text" cols="40" rows="4" class="sizeL"></textarea>
 					</dd>
@@ -39,7 +39,7 @@
 						<input type="button" value="参照" class="fileBtn">
 						<input type="file" id="voice_file" name="voice_file" class="uploader">
 					</dd>
-<span class="warning">※8kbps ロスレス モノラル でエンコードされた MP3を推奨</span>
+<span class="warning">＊8kbps ロスレス モノラル でエンコードされた MP3を推奨</span>
 				</dl>
 			</dd>
 		</dl>
