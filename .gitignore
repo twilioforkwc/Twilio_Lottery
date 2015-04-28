@@ -1,3 +1,4 @@
 node_modules
 *swp
 files/*mp3
+.DS_Store
