@@ -10,7 +10,8 @@ module.exports = function(req, to, sid, auth_token, callback){
     }else{
       var number = data.incomingPhoneNumbers[0];
       client.incomingPhoneNumbers(number.sid).update({
-        voiceUrl: req.protocol + "://" + req.hostname + '/twilio'
+        voiceUrl: req.protocol + "://" + req.hostname + '/twilio',
+        voiceMethod: 'POST'
       }, function(err, num){
         callback(err, num);
       });
