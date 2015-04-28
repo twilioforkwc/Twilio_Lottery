@@ -1,5 +1,5 @@
 var express = require('express');
-var mongoose = require('mongoose'); 
+var mongoose = require('mongoose');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var multer  = require('multer');
@@ -104,11 +104,11 @@ app.post('/start', function(req, res){
     var account = client.accounts(sid).get(function(err, account){
       if(err){
         // 認証エラーはトップページを表示
-        res.render('index', {title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: '認証エラー'}); 
+        res.render('index', {title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: '認証エラー'});
       }else{
         if(account.type != 'Full'){
           //トライアルアカウントはメッセージを表示
-          res.render('error', {title: 'Twilio抽選アプリ', message: 'トライアルアカウント'}); 
+          res.render('error', {title: 'Twilio抽選アプリ', message: 'トライアルアカウント'});
         }else{
           //アップグレードアカウントなら認証情報をセッションに
           req.session.sid = sid;
@@ -119,7 +119,7 @@ app.post('/start', function(req, res){
     });
   }catch(e){
     console.log(e);
-    res.render('index', {title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: '認証エラー'}); 
+    res.render('index', {title: 'Twilio抽選アプリ', csrf: req.csrfToken(), message: '認証エラー'});
   }
 });
 
@@ -140,9 +140,9 @@ app.get('/start', function(req, res){
       });
       var options = option_data.join('');
       var sms_options = sms_option_data.join('');
-      res.render('start', {title: 'Twilio抽選アプリ', options: options, sms_options: sms_options, csrf: req.csrfToken()}); 
+      res.render('start', {title: 'Twilio抽選アプリ', options: options, sms_options: sms_options, csrf: req.csrfToken()});
     }else{
-      res.render('error', {title: 'Twilio抽選アプリ', message: err.message}); 
+      res.render('error', {title: 'Twilio抽選アプリ', message: err.message});
     }
   });
 });
@@ -223,7 +223,7 @@ app.post('/number', function(req, res){
 
 app.get('/token', function(req, res){
   if(req.xhr){
-    res.json({csrf: req.csrfToken()});  
+    res.json({csrf: req.csrfToken()});
   }
 });
 
@@ -238,7 +238,7 @@ app.get('/l/:token', function(req, res){
       res.redirect('/error');
     }else{
       get_candidate_count({token: docs[0].token}, function(num){
-        res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});  
+        res.render('lottery', {title: 'Twilio抽選アプリ', number: display_phone_number('+'+docs[0].phone_number), message: message, num: num, token: docs[0].token, csrf: req.csrfToken(), finished: 0});
       });
     }
   });
@@ -263,7 +263,7 @@ app.post('/select', function(req, res){
     if(!err && lotteries[0]){
       var num = parseInt(req.param('num'), 10);
       if(num <= 0){
-        res.json({success: false, message: '当選者数を1以上の数値で指定してください'});  
+        res.json({success: false, message: '当選者数を1以上の数値で指定してください'});
       }else{
         var args = {token: req.param('token')};
         if(req.param('no_dup')){
@@ -355,7 +355,8 @@ app.get('/s/:token', function(req, res){
   Lottery.find({token: req.param('token')}, function(err, lotteries){
     if(!err){
       var lottery = lotteries[0];
-      Phone.where('token', req.param('token')).where({status: {'$ne': null}}).where({status: {'$ne': ""}}).exec(function(err, docs){
+      //Phone.where('token', req.param('token')).where({status: {'$ne': null}}).where({status: {'$ne': ""}}).exec(function(err, docs){
+      Phone.where('token', req.param('token')).where({status: 'won'}).exec(function(err, docs){
         var data = [];
         for(var i = 0, l = docs.length; i < l; i++){
           data.push({status: docs[i].status, phone_number: docs[i].phone_number, callstatus: docs[i].callstatus});
@@ -489,7 +490,7 @@ app.post('/twilio/cancel/:token', function(req, res){
           send_sms(lottery_data.account_sid, lottery_data.auth_token, "抽選登録を解除しました。",  lottery_data.sms_phone_number, req.param('From'));
         }
       });
-    });  
+    });
   }else{
     hangup(res);
   }
